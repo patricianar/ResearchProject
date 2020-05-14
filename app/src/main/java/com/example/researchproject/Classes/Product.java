@@ -1,4 +1,4 @@
-package com.example.researchproject.JsonClasses;
+package com.example.researchproject.Classes;
 
 public class Product {
     private String availability; //String
@@ -6,7 +6,7 @@ public class Product {
     private int base_variant_id; //array( undefined )
     private int brand_id; //int
     private int categories;  //array( number) ???
-    private double $cost_price; //int
+    private double cost_price; //int
     private String description; //String
     private int id; //int
     private int inventory_level; //int
@@ -58,12 +58,12 @@ public class Product {
         this.categories = categories;
     }
 
-    public double get$cost_price() {
-        return $cost_price;
+    public double getCost_price() {
+        return cost_price;
     }
 
-    public void set$cost_price(double $cost_price) {
-        this.$cost_price = $cost_price;
+    public void setCost_price(double cost_price) {
+        this.cost_price = cost_price;
     }
 
     public String getDescription() {

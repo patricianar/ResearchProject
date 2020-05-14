@@ -1,7 +1,6 @@
 package com.example.researchproject;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -9,15 +8,15 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.researchproject.Classes.Product;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.example.researchproject.JsonClasses.*;
-import java.net.URI;
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,21 +55,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void getResponse(String response) {
                 try {
-                    JSONObject jsonObj = new JSONObject(response);
+                    //JSONObject jsonObj = new JSONObject(response);
+                    //JSONArray products = jsonObj.getJSONArray("products");
                     Gson gson = new Gson();
-                    Product  statusJSON = gson.fromJson(response , Product.class);
-                    Log.e("response", jsonObj.toString());
-                    JSONArray teamLineups = jsonObj.getJSONArray("teamLineups");
-                    JSONObject awayTeam = teamLineups.getJSONObject(0);
-                    JSONObject awayTeamLineups = awayTeam.getJSONObject("actual");
-                    JSONArray awayTeamLineupsArray = awayTeamLineups.getJSONArray("lineupPositions");
+                    Product statusJSON = gson.fromJson(response , Product.class);
+                    //Product[] vmNamesArray = gson.fromJson(response, Product[].class);
+                    Log.e("response", "h" + statusJSON.getAvailability());
 
-                    JSONObject homeTeam = teamLineups.getJSONObject(1);
-                    JSONObject homeTeamLineups = homeTeam.getJSONObject("actual");
-                    JSONArray homeTeamLineupsArray = homeTeamLineups.getJSONArray("lineupPositions");
 
-                } catch (JSONException ex) { // catch for the JSON parsing error
-                    Log.e("JSON: ", ex.getMessage());
                 } catch (Exception ex) {
                     Log.e("Request: ", ex.getMessage());
                 }
