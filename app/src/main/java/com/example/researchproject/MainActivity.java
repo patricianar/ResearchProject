@@ -9,10 +9,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.example.researchproject.JsonClasses.*;
 import java.net.URI;
 import java.net.URL;
 
@@ -54,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
             public void getResponse(String response) {
                 try {
                     JSONObject jsonObj = new JSONObject(response);
+                    Gson gson = new Gson();
+                    Product  statusJSON = gson.fromJson(response , Product.class);
                     Log.e("response", jsonObj.toString());
                     JSONArray teamLineups = jsonObj.getJSONArray("teamLineups");
                     JSONObject awayTeam = teamLineups.getJSONObject(0);
