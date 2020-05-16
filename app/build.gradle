@@ -3,7 +3,6 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
-    useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
         applicationId "com.example.researchproject"
@@ -39,7 +38,7 @@ dependencies {
     //Gson
     implementation 'com.google.code.gson:gson:2.8.6'
 
-
+    //Cardview
     implementation 'com.google.android.material:material:1.1.0'
 
     // Image Loaders

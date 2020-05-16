@@ -39,7 +39,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyCustom
         holder.tvProductQty.setText(String.valueOf(productList.get(position).getInventory_level()));
         holder.tvProductPrice.setText(String.valueOf(productList.get(position).getPrice()));
         Picasso.get().load(productList.get(position).getUrl_image()).into(holder.imgProduct);
-        Log.e("urs", productList.get(position).getUrl_image());
     }
 
     @Override
