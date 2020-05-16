@@ -2,6 +2,7 @@ package com.example.researchproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,6 +10,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.researchproject.Classes.Product;
+import com.example.researchproject.Classes.Products;
+import com.example.researchproject.Product.ProductCustomerActivity;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -58,9 +61,9 @@ public class MainActivity extends AppCompatActivity {
                     //JSONObject jsonObj = new JSONObject(response);
                     //JSONArray products = jsonObj.getJSONArray("products");
                     Gson gson = new Gson();
-                    Product statusJSON = gson.fromJson(response , Product.class);
+                    Products statusJSON = gson.fromJson(response , Products.class);
                     //Product[] vmNamesArray = gson.fromJson(response, Product[].class);
-                    Log.e("response", "h" + statusJSON.getAvailability());
+                    Log.e("response", "h" + statusJSON.getProducts().get(0).getReview_message());
 
 
                 } catch (Exception ex) {
@@ -71,9 +74,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loginPost(View view){
-        String username = usernameField.getText().toString();
-        String password = passwordField.getText().toString();
-        method.setText("Post Method");
-        new SigninActivity(this,status,role,1).execute(username,password);
+//        String username = usernameField.getText().toString();
+//        String password = passwordField.getText().toString();
+//        method.setText("Post Method");
+//        new SigninActivity(this,status,role,1).execute(username,password);
+        startActivity(new Intent(MainActivity.this, ProductCustomerActivity.class));
     }
 }

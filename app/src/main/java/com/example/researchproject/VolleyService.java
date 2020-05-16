@@ -20,7 +20,7 @@ public class VolleyService {
     Context context;
     RequestQueue requestQueue;
 
-    VolleyService(Context context) {
+    public VolleyService(Context context) {
         this.context = context;
         requestQueue = Volley.newRequestQueue(context);
     }
@@ -36,7 +36,7 @@ public class VolleyService {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.e("Volley: ", error.getMessage());
+                    Log.e("Volley: ", error.getMessage() + "hi");
                 }
             }) {
 

@@ -38,4 +38,10 @@ dependencies {
 
     //Gson
     implementation 'com.google.code.gson:gson:2.8.6'
+
+
+    implementation 'com.google.android.material:material:1.1.0'
+
+    // Image Loaders
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }

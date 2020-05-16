@@ -121,12 +121,12 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/button2"
         android:layout_alignBottom="@+id/button2"
-        android:layout_alignLeft="@+id/textView2"
+        android:layout_alignLeft="@+id/tvline"
         android:onClick="login"
         android:text="@string/LoginGet" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tvline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/editText2"

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginEnd="16dp"
+    app:cardBackgroundColor="@color/colorAccent"
+    app:cardCornerRadius="6dp"
+    app:cardElevation="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constrainLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvProductName"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="TextView"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/imgProduct"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvProductQty"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="8dp"
+            android:text="TextView"
+            android:textColor="@color/colorPrimaryDark"
+            app:layout_constraintStart_toEndOf="@+id/imgProduct"
+            app:layout_constraintTop_toBottomOf="@+id/tvProductName" />
+
+        <TextView
+            android:id="@+id/tvProductPrice"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="8dp"
+            android:text="TextView"
+            android:textColor="@color/colorPrimaryDark"
+            app:layout_constraintStart_toEndOf="@+id/imgProduct"
+            app:layout_constraintTop_toBottomOf="@+id/tvProductQty" />
+
+        <ImageView
+            android:id="@+id/imgProduct"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/alert_dark_frame" />
+
+        <ImageView
+            android:id="@+id/imgAddToCar"
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvLine"
+            app:srcCompat="@android:drawable/checkbox_on_background" />
+
+        <TextView
+            android:id="@+id/tvLine"
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@android:color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imgProduct" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

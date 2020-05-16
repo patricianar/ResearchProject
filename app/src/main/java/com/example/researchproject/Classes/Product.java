@@ -1,30 +1,20 @@
 package com.example.researchproject.Classes;
 
 public class Product {
-    private String availability; //String
     private String barcode;
-    private int base_variant_id; //array( undefined )
-    private int brand_id; //int
-    private int categories;  //array( number) ???
+    private String brand_id; //int
+    private String categories;  //array( number) ???
     private double cost_price; //int
     private String description; //String
     private int id; //int
     private int inventory_level; //int
     private int inventory_warning_level; //int
     private String name; //String
-    private String preorder_message; //String
     private double price; //double
     private int reviews_count; //int
+    private String review_message; //String
     private int reviews_rating_sum; //int
     private String url_image; //String
-
-    public String getAvailability() {
-        return availability;
-    }
-
-    public void setAvailability(String availability) {
-        this.availability = availability;
-    }
 
     public String getBarcode() {
         return barcode;
@@ -34,27 +24,19 @@ public class Product {
         this.barcode = barcode;
     }
 
-    public int getBase_variant_id() {
-        return base_variant_id;
-    }
-
-    public void setBase_variant_id(int base_variant_id) {
-        this.base_variant_id = base_variant_id;
-    }
-
-    public int getBrand_id() {
+    public String getBrand_id() {
         return brand_id;
     }
 
-    public void setBrand_id(int brand_id) {
+    public void setBrand_id(String brand_id) {
         this.brand_id = brand_id;
     }
 
-    public int getCategories() {
+    public String getCategories() {
         return categories;
     }
 
-    public void setCategories(int categories) {
+    public void setCategories(String categories) {
         this.categories = categories;
     }
 
@@ -106,14 +88,6 @@ public class Product {
         this.name = name;
     }
 
-    public String getPreorder_message() {
-        return preorder_message;
-    }
-
-    public void setPreorder_message(String preorder_message) {
-        this.preorder_message = preorder_message;
-    }
-
     public double getPrice() {
         return price;
     }
@@ -128,6 +102,14 @@ public class Product {
 
     public void setReviews_count(int reviews_count) {
         this.reviews_count = reviews_count;
+    }
+
+    public String getReview_message() {
+        return review_message;
+    }
+
+    public void setReview_message(String review_message) {
+        this.review_message = review_message;
     }
 
     public int getReviews_rating_sum() {
