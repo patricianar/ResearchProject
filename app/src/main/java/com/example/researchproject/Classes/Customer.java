@@ -11,7 +11,7 @@ public class Customer
     private String phone;
     private String postal_code;
     private String state;
-    private String street_1;
+    private String street;
 
     public String getCity() {
         return city;
@@ -85,11 +85,11 @@ public class Customer
         this.state = state;
     }
 
-    public String getStreet_1() {
-        return street_1;
+    public String getStreet() {
+        return street;
     }
 
-    public void setStreet_1(String street_1) {
-        this.street_1 = street_1;
+    public void setStreet(String street) {
+        this.street = street;
     }
 }

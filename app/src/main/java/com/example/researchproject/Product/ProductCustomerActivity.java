@@ -7,10 +7,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.example.researchproject.Classes.Products;
+import com.example.researchproject.Classes.Product;
 import com.example.researchproject.R;
 import com.example.researchproject.VolleyService;
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ProductCustomerActivity extends AppCompatActivity {
 
@@ -31,11 +35,12 @@ public class ProductCustomerActivity extends AppCompatActivity {
                     //JSONObject jsonObj = new JSONObject(response);
                     //JSONArray products = jsonObj.getJSONArray("products");
                     Gson gson = new Gson();
-                    Products products = gson.fromJson(response , Products.class);
+                    Product[] products = gson.fromJson(response , Product[].class);
                     //Product[] vmNamesArray = gson.fromJson(response, Product[].class);
-                    Log.e("response", "h" + products.getProducts().get(0).getReview_message());
+                    Log.e("response", "h" + products[0].getReview_message());
 
-                    ProductAdapter myAdapter = new ProductAdapter(products.getProducts());
+                    List<Product> productsList = new ArrayList<Product>(Arrays.asList(products));
+                    ProductAdapter myAdapter = new ProductAdapter(productsList);
                     RecyclerView recyclerView = findViewById(R.id.recyclerViewProducts);
                     recyclerView.setLayoutManager(new LinearLayoutManager(ProductCustomerActivity.this));
                     recyclerView.setAdapter(myAdapter);
