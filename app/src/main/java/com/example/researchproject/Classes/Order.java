@@ -1,5 +1,7 @@
 package com.example.researchproject.Classes;
 
+import java.util.List;
+
 public class Order {
         private String cart_id;
         private Customer customer;
@@ -10,8 +12,8 @@ public class Order {
         private int items_total;
         private String payment_method;
         private String payment_status;
-        private Products products;
-        private Double shipping_cost_tax;
+        private List<ProductOrdered> productsOrdered;
+        private Double shipping_cost;
         private String status;
         private Double total;
         private Double total_tax;
