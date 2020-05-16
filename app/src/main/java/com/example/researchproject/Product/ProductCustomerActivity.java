@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.researchproject.Classes.Inventory;
 import com.example.researchproject.Classes.Product;
 import com.example.researchproject.R;
 import com.example.researchproject.VolleyService;
@@ -34,12 +35,12 @@ public class ProductCustomerActivity extends AppCompatActivity {
                     //JSONObject jsonObj = new JSONObject(response);
                     //JSONArray products = jsonObj.getJSONArray("products");
                     Gson gson = new Gson();
-                    Product[] products = gson.fromJson(response , Product[].class);
+                    Inventory products = gson.fromJson(response , Inventory.class);
                     //Product[] vmNamesArray = gson.fromJson(response, Product[].class);
-                    Log.e("response", "h" + products[0].getReview_message());
+                    //Log.e("response", "h" + products.getReview_message());
 
-                    List<Product> productsList = new ArrayList<Product>(Arrays.asList(products));
-                    ProductAdapter myAdapter = new ProductAdapter(productsList);
+                    //List<Product> productsList = new ArrayList<Product>(Arrays.asList(products));
+                    ProductAdapter myAdapter = new ProductAdapter(products.getProducts());
                     RecyclerView recyclerView = findViewById(R.id.recyclerViewProducts);
                     recyclerView.setLayoutManager(new LinearLayoutManager(ProductCustomerActivity.this));
                     recyclerView.setAdapter(myAdapter);
