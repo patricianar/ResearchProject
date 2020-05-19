@@ -1,32 +1,30 @@
 package com.example.researchproject.Classes;
 
+import java.util.List;
+
 public class Customer
 {
-    private String city;
-    private String country;
+    private List<Address> addresses;
     private String email;
     private String first_name;
     private int id;
     private String last_name;
+    private String password;
     private String phone;
-    private String postal_code;
-    private String state;
-    private String street;
 
-    public String getCity() {
-        return city;
+    public Customer(String email, String first_name, String last_name, String password) {
+        this.email = email;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.password = password;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public List<Address> getAddresses() {
+        return addresses;
     }
 
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
     }
 
     public String getEmail() {
@@ -61,6 +59,14 @@ public class Customer
         this.last_name = last_name;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getPhone() {
         return phone;
     }
@@ -69,27 +75,4 @@ public class Customer
         this.phone = phone;
     }
 
-    public String getPostal_code() {
-        return postal_code;
-    }
-
-    public void setPostal_code(String postal_code) {
-        this.postal_code = postal_code;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
 }

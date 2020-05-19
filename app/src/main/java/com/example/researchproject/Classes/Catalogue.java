@@ -2,7 +2,7 @@ package com.example.researchproject.Classes;
 
 import java.util.List;
 
-public class Inventory {
+public class Catalogue {
     private List<Product> products;
 
     public List<Product> getProducts() {

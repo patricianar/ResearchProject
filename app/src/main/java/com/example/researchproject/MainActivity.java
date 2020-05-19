@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.researchproject.Customer.RegistrationActivity;
 import com.example.researchproject.Product.ProductCustomerActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,5 +25,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Button btn2 = findViewById(R.id.button2);
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, RegistrationActivity.class));
+            }
+        });
     }
 }

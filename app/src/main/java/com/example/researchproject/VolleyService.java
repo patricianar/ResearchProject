@@ -14,20 +14,19 @@ import com.android.volley.toolbox.Volley;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class VolleyService {
 
-    Context context;
-    RequestQueue requestQueue;
+    private RequestQueue requestQueue;
 
     public VolleyService(Context context) {
-        this.context = context;
         requestQueue = Volley.newRequestQueue(context);
     }
 
-    public void executeRequest(String url, final VolleyCallback callback) {
+    public void executeGetRequest(String url, final VolleyCallback callback) {
         try {
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            StringRequest stringGetRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     if (callback != null)
@@ -50,11 +49,41 @@ public class VolleyService {
                     return params;
                 }
             };
-            requestQueue.add(stringRequest);
+            requestQueue.add(stringGetRequest);
 
         } catch (Exception e) {
             Log.e("Volley: ", e.getMessage());
         }
+    }
+
+    public void executePostRequest(String url, final VolleyCallback callback, final String name, final String jsonInString){
+        StringRequest putRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        // response
+                        Log.d("Response", response);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Log.e("Error.Response", Objects.requireNonNull(error.getMessage()));
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put(name, jsonInString);
+                return params;
+            }
+        };
+        requestQueue.add(putRequest);
     }
 
     public interface VolleyCallback {
