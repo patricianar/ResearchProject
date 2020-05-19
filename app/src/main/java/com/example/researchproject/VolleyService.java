@@ -62,8 +62,8 @@ public class VolleyService {
                 {
                     @Override
                     public void onResponse(String response) {
-                        // response
-                        Log.d("Response", response);
+                        if (callback != null)
+                            callback.getResponse(response);
                     }
                 },
                 new Response.ErrorListener()

@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ResearchProject</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="btn_login">Login</string>
+    <string name="txt_link_no_account">No account? Create a new one</string>
+    <string name="logoDes">logo</string>
 </resources>

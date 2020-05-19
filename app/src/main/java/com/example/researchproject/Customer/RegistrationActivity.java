@@ -69,7 +69,7 @@ public class RegistrationActivity extends AppCompatActivity  implements View.OnC
                 @Override
                 public void getResponse(String response) {
                     try {
-
+                        Log.e(TAG, response);
                     } catch (Exception ex) {
                         Log.e("Request: ", ex.getMessage());
                     }
