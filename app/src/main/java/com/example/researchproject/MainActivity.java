@@ -7,9 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.researchproject.Admin.ProductAdminActivity;
 import com.example.researchproject.Customer.LoginActivity;
 import com.example.researchproject.Customer.RegistrationActivity;
-import com.example.researchproject.Product.ProductCustomerActivity;
+import com.example.researchproject.Customer.ProductCustomerActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,6 +40,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            }
+        });
+
+        Button btn4 = findViewById(R.id.button4);
+        btn4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ProductAdminActivity.class));
             }
         });
     }

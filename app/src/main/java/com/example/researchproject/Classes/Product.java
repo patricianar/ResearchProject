@@ -3,7 +3,7 @@ package com.example.researchproject.Classes;
 public class Product {
     private String barcode;
     private String brand_id; //int
-    private String categories;  //array( number) ???
+    private String categories;  //number??
     private double cost_price; //int
     private String description; //String
     private int id; //int
@@ -15,6 +15,23 @@ public class Product {
     private String review_message; //String
     private int reviews_rating_sum; //int
     private String url_image; //String
+
+    public Product(String barcode, String brand_id, String categories, double cost_price, String description, int id, int inventory_level, int inventory_warning_level, String name, double price, String url_image) {
+        this.barcode = barcode;
+        this.brand_id = brand_id;
+        this.categories = categories;
+        this.cost_price = cost_price;
+        this.description = description;
+        this.id = id;
+        this.inventory_level = inventory_level;
+        this.inventory_warning_level = inventory_warning_level;
+        this.name = name;
+        this.price = price;
+        this.reviews_count = 0;
+        this.review_message = "";
+        this.reviews_rating_sum = 0;
+        this.url_image = url_image;
+    }
 
     public String getBarcode() {
         return barcode;

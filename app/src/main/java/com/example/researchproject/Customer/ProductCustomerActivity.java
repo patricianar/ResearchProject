@@ -1,4 +1,4 @@
-package com.example.researchproject.Product;
+package com.example.researchproject.Customer;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
