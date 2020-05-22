@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.researchproject.Admin.ProductAdminActivity;
 import com.example.researchproject.Classes.Customer;
 import com.example.researchproject.R;
 import com.example.researchproject.VolleyService;
@@ -45,7 +46,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         if (v == btnLogin) {
-            String email = etEmail.getText().toString();
+            final String email = etEmail.getText().toString();
             String password = etPassword.getText().toString();
 
             String url = "https://myprojectstore.000webhostapp.com/customer/";
@@ -60,6 +61,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         }
                         else{
                             Toast.makeText(LoginActivity.this, "Hello " + response, Toast.LENGTH_SHORT).show();
+                            if(email.equals("admin@gmail.com")){
+                                startActivity(new Intent(LoginActivity.this, ProductAdminActivity.class));
+                            }else{
+                                startActivity(new Intent(LoginActivity.this, ProductCustomerActivity.class));
+                            }
                         }
                     } catch (Exception ex) {
                         Log.e(TAG, ex.getMessage());

@@ -57,6 +57,7 @@ public class VolleyService {
     }
 
     public void executePostRequest(String url, final VolleyCallback callback, final String name, final String jsonInString){
+        try {
         StringRequest putRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>()
                 {
@@ -84,6 +85,9 @@ public class VolleyService {
             }
         };
         requestQueue.add(putRequest);
+        } catch (Exception e) {
+            Log.e("Volley: ", e.getMessage());
+        }
     }
 
     public interface VolleyCallback {

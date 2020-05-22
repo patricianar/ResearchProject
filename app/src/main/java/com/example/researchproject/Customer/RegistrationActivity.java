@@ -23,10 +23,14 @@ import com.example.researchproject.R;
 import com.example.researchproject.VolleyService;
 import com.google.gson.Gson;
 
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class RegistrationActivity extends AppCompatActivity  implements View.OnClickListener{
+public class RegistrationActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "RegistrationActivity";
     EditText etFistName, etLastName, etEmail, etPassword1, etPassword2;
     Button btnRegister;
@@ -61,21 +65,29 @@ public class RegistrationActivity extends AppCompatActivity  implements View.OnC
             String password1 = etPassword1.getText().toString();
             String password2 = etPassword2.getText().toString();
 
-            final Customer customer = new Customer(email, firstName, lastName, password1);
-            Gson gson = new Gson();
-            final String jsonInString = gson.toJson(customer);
-            String url = "https://myprojectstore.000webhostapp.com/customer/";
+            String validationResult = validateRegistrationData(firstName, lastName, email, password1, password2);
 
-            VolleyService request = new VolleyService(this);
-            request.executePostRequest(url, new VolleyService.VolleyCallback() {
-                @Override
-                public void getResponse(String response) {
-                    try {
-                        if(response.equals("true")){
-                            Toast.makeText(RegistrationActivity.this, "You have successfully registered \n You will now be redirected to LogIn Page.", Toast.LENGTH_LONG).show();
+            if (!validationResult.equals("Success")) {
+                Toast.makeText(RegistrationActivity.this, validationResult, Toast.LENGTH_LONG).show();
+            } else {
+                final Customer customer = new Customer(email, firstName, lastName, password1);
+                Gson gson = new Gson();
+                final String jsonInString = gson.toJson(customer);
+                String url = "https://myprojectstore.000webhostapp.com/customer/";
+
+                VolleyService request = new VolleyService(this);
+                request.executePostRequest(url, new VolleyService.VolleyCallback() {
+                    @Override
+                    public void getResponse(String response) {
+                        try {
+                            if (response.equals("true")) {
+                                Toast.makeText(RegistrationActivity.this, "You have successfully registered \n You will now be redirected to LogIn Page.", Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(RegistrationActivity.this, "Your account already exits.", Toast.LENGTH_LONG).show();
+                            }
+
                             final Intent loginIntent = new Intent(RegistrationActivity.this, LoginActivity.class);
-
-                            Thread thread = new Thread(){
+                            Thread thread = new Thread() {
                                 @Override
                                 public void run() {
                                     try {
@@ -87,13 +99,65 @@ public class RegistrationActivity extends AppCompatActivity  implements View.OnC
                                 }
                             };
                             thread.start();
+
+                            Log.d(TAG, response);
+                        } catch (Exception ex) {
+                            Log.e(TAG, ex.getMessage());
                         }
-                        Log.d(TAG, response);
-                    } catch (Exception ex) {
-                        Log.e(TAG, ex.getMessage());
                     }
-                }
-            }, "customer", jsonInString);
+                }, "customer", jsonInString);
+            }
         }
     }
+
+    public String validateRegistrationData(String firstName, String lastName, String email, String password1, String password2) {
+        String result = "";
+        if (!email.isEmpty()) {
+            if (!firstName.isEmpty() && !lastName.isEmpty()) {
+                int length = password1.length();
+                if (length >= 1) { //for testing but should be longer
+                    if (isValidPassword(password1) == true) {
+                        if (password1.equals(password2)) {
+                            if (!isValidEmail(email)) {
+                                result = "Invalid email";
+                            } else {
+                                result = "Success";
+                            }
+                        } else {
+                            result = "Passwords don't match";
+                        }
+                    } else {
+                        result = "Password should contain one uppercase, one number and one special character";
+                    }
+                } else {
+                    result = "Password is too short";
+                }
+            } else {
+                result = "Names can't be empty";
+            }
+        } else {
+            result = "Email can't be empty";
+        }
+        return result;
+    }
+
+    public boolean isValidPassword(String password) {
+        Pattern pattern;
+        Matcher matcher;
+        String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{4,}$";
+        pattern = Pattern.compile(PASSWORD_PATTERN);
+        matcher = pattern.matcher(password);
+        return matcher.matches();
+    }
+
+    private boolean isValidEmail(String email) {
+        return Pattern.compile("^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
+                + "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\."
+                + "([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
+                + "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$").matcher(email).matches();
+    }
+
+
 }
