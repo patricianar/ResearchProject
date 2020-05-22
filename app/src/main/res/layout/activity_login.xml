@@ -21,14 +21,14 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="25dp"
             android:contentDescription="@string/logoDes"
-            app:srcCompat="@drawable/ducky"></ImageView>
+            app:srcCompat="@drawable/logo"></ImageView>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
-            android:textColorHint="@color/colorAccent">
+            android:textColorHint="@color/colorSecondaryText">
 
             <EditText
                 android:id="@+id/etEmailLogin"
@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/email_hint"
                 android:inputType="textEmailAddress"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorPrimaryText"
                 android:importantForAutofill="no"></EditText>
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
-            android:textColorHint="@color/colorAccent">
+            android:textColorHint="@color/colorSecondaryText">
 
             <EditText
                 android:id="@+id/etPasswordLogin"
@@ -53,20 +53,20 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/password_hint"
                 android:inputType="textPassword"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorPrimaryText"
                 android:importantForAutofill="no"></EditText>
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnLogin"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
             android:layout_marginBottom="25dp"
-            android:background="@color/colorAccent"
             android:padding="12dp"
             android:text="@string/btn_login"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/colorAccent"
             android:textStyle="bold" />
 
         <TextView
@@ -76,7 +76,7 @@
             android:layout_marginBottom="25dp"
             android:gravity="center"
             android:text="@string/txt_link_no_account"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/colorPrimaryText"
             android:textSize="16sp" />
 
     </LinearLayout>

@@ -67,8 +67,6 @@ public class ProductAdminActivity extends AppCompatActivity {
                     }
                 }, "products", jsonCatalogue);
 
-
-
                 //selectCSVFile();
             }
         });
