@@ -19,7 +19,7 @@ public class ProductCustomerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_customer);
 
-        String url = "https://myprojectstore.000webhostapp.com/";
+        String url = "https://myprojectstore.000webhostapp.com/product";
 
         VolleyService request = new VolleyService(this);
         request.executeGetRequest(url, new VolleyService.VolleyCallback() {

@@ -2,12 +2,14 @@ package com.example.researchproject.Customer;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -69,9 +71,26 @@ public class RegistrationActivity extends AppCompatActivity  implements View.OnC
                 @Override
                 public void getResponse(String response) {
                     try {
-                        Log.e(TAG, response);
+                        if(response.equals("true")){
+                            Toast.makeText(RegistrationActivity.this, "You have successfully registered \n You will now be redirected to LogIn Page.", Toast.LENGTH_LONG).show();
+                            final Intent loginIntent = new Intent(RegistrationActivity.this, LoginActivity.class);
+
+                            Thread thread = new Thread(){
+                                @Override
+                                public void run() {
+                                    try {
+                                        Thread.sleep(3500); // wait before going to login
+                                        startActivity(loginIntent);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            };
+                            thread.start();
+                        }
+                        Log.d(TAG, response);
                     } catch (Exception ex) {
-                        Log.e("Request: ", ex.getMessage());
+                        Log.e(TAG, ex.getMessage());
                     }
                 }
             }, "customer", jsonInString);
