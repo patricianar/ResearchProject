@@ -43,9 +43,9 @@ public class VolleyService {
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> params = new HashMap<>();
                     //params.put("Content-Type", "application/json");
-                    //String credentials = "5d63830e-ad82-459a-a7d4-6d1298:MYSPORTSFEEDS";
+                    //String credentials = "";
                     //String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-                    //params.put("Authorization", auth);
+                    //params.put("data", "data");
                     return params;
                 }
             };

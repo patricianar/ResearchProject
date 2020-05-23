@@ -32,7 +32,7 @@ public class ProductCustomerActivity extends AppCompatActivity {
                     RecyclerView recyclerView = findViewById(R.id.recyclerViewProducts);
                     recyclerView.setLayoutManager(new LinearLayoutManager(ProductCustomerActivity.this));
                     recyclerView.setAdapter(myAdapter);
-
+                    Log.d("Response", response);
                 } catch (Exception ex) {
                     Log.e("Request: ", ex.getMessage());
                 }

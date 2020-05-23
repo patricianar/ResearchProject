@@ -8,10 +8,14 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.researchproject.Classes.Catalogue;
 import com.example.researchproject.Classes.Customer;
 import com.example.researchproject.Classes.Product;
+import com.example.researchproject.Customer.LoginActivity;
+import com.example.researchproject.Customer.ProductCustomerActivity;
+import com.example.researchproject.Customer.RegistrationActivity;
 import com.example.researchproject.R;
 import com.example.researchproject.VolleyService;
 import com.google.gson.Gson;
@@ -29,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class ProductAdminActivity extends AppCompatActivity {
-
+    private static final String TAG = "ProductAdminActivity";
     private static final int ACTIVITY_CHOOSE_FILE1 = 0;
 
     @Override
@@ -43,9 +47,6 @@ public class ProductAdminActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ArrayList<Product> productsList = ReadCSV();
 
-                //final Customer customer = new Customer(email, firstName, lastName, password1);
-               // Gson gson = new Gson();
-                //final String jsonInString = gson.toJson(customer);
                 String url = "https://myprojectstore.000webhostapp.com/product/";
 
                 Catalogue catalogue = new Catalogue();
@@ -54,15 +55,30 @@ public class ProductAdminActivity extends AppCompatActivity {
                 Gson gson = new Gson();
                 String jsonCatalogue = gson.toJson(catalogue);
 
-                Log.e("test csv", productsList.get(0).getName());
                 VolleyService request = new VolleyService(ProductAdminActivity.this);
                 request.executePostRequest(url, new VolleyService.VolleyCallback() {
                     @Override
                     public void getResponse(String response) {
                         try {
-                            Log.e("aaa", response);
+                            if(response.equals("true")){
+                                Toast.makeText(ProductAdminActivity.this, "Your catalogue has been updated", Toast.LENGTH_SHORT).show();
+                                final Intent productIntent = new Intent(ProductAdminActivity.this, ProductCustomerActivity.class);
+                                Thread thread = new Thread() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            Thread.sleep(3500); // wait before going to products
+                                            startActivity(productIntent);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                };
+                                thread.start();
+                            }
+                            Log.d(TAG, response);
                         } catch (Exception ex) {
-                            Log.e("Request: ", ex.getMessage());
+                            Log.e(TAG, ex.getMessage());
                         }
                     }
                 }, "products", jsonCatalogue);

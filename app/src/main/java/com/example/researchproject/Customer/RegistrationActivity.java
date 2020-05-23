@@ -115,7 +115,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         if (!email.isEmpty()) {
             if (!firstName.isEmpty() && !lastName.isEmpty()) {
                 int length = password1.length();
-                if (length >= 1) { //for testing but should be longer
+                if (length >= 6) { //for testing but should be longer
                     if (isValidPassword(password1) == true) {
                         if (password1.equals(password2)) {
                             if (!isValidEmail(email)) {
@@ -158,6 +158,5 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                 + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
                 + "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$").matcher(email).matches();
     }
-
 
 }
