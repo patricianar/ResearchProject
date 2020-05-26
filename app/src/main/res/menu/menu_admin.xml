@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto">
+<item android:id="@+id/search"
+    android:title="@string/search"
+    android:icon="@drawable/ic_search"
+    android:orderInCategory="2"
+    app:showAsAction="always"></item>
+<item android:id="@+id/orders"
+    android:title="@string/notification"
+    android:icon="@drawable/ic_orders"
+    android:orderInCategory="1"
+    app:showAsAction="always"></item>
+
+<item android:id="@+id/addProducts"
+    android:title="@string/addProducts"
+    app:showAsAction="never">
+</item>
+<item android:id="@+id/updateProducts"
+    android:title="@string/updateProducts"
+    app:showAsAction="never">
+</item>
+</menu>

@@ -1,22 +1,36 @@
 package com.example.researchproject.Admin;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.researchproject.Classes.Catalogue;
 import com.example.researchproject.Classes.Product;
+import com.example.researchproject.Customer.LoginActivity;
 import com.example.researchproject.Customer.ProductCustomerActivity;
+import com.example.researchproject.Customer.ProductCustomerAdapter;
+import com.example.researchproject.Customer.RegistrationActivity;
 import com.example.researchproject.R;
+import com.example.researchproject.SwipeToDeleteCallback;
 import com.example.researchproject.VolleyService;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
-
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,25 +39,86 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Objects;
 
-
 public class ProductAdminActivity extends AppCompatActivity {
     private static final String TAG = "ProductAdminActivity";
     private static final int FILE_REQUEST_CODE = 10;
-
     private ArrayList<Product> productsList = new ArrayList<>();
+    ConstraintLayout constraintLayout;
+    RecyclerView recyclerView;
+    VolleyService request;
+    String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_admin);
 
-        Button btnImport = findViewById(R.id.btnImportProducts);
-        btnImport.setOnClickListener(new View.OnClickListener() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        // Sets the Toolbar to act as the ActionBar for this Activity window.
+        setSupportActionBar(toolbar);
+
+        constraintLayout = findViewById(R.id.layoutProdAdmin);
+
+        url = "https://myprojectstore.000webhostapp.com/product/";
+        request = new VolleyService(ProductAdminActivity.this);
+
+        getProducts();
+    }
+
+    private void getProducts() {
+        request.executeGetRequest(url, new VolleyService.VolleyCallback() {
             @Override
-            public void onClick(View v) {
-                selectCSVFile();
+            public void getResponse(String response) {
+                try {
+                    Gson gson = new Gson();
+                    Catalogue catalogue = gson.fromJson(response, Catalogue.class);
+                    ProductAdminAdapter myAdapter = new ProductAdminAdapter(catalogue.getProducts());
+                    recyclerView = findViewById(R.id.recyclerViewProductsAdmin);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(ProductAdminActivity.this));
+                    recyclerView.setAdapter(myAdapter);
+                    enableSwipeToDeleteAndUndo(myAdapter);
+                    Log.d(TAG, response);
+                } catch (Exception ex) {
+                    Log.e(TAG, ex.getMessage());
+                }
             }
         });
+    }
+
+    // Menu icons are inflated just as they were with actionbar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_admin, menu);
+        return true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        getProducts();
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.search:
+                //textViewContent.setText("Search was selected");
+                //Toast.makeText(this, "Search", Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.orders:
+//                textViewContent.setText("Delete was selected");
+//                Toast.makeText(this, "Delete", Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.addProducts:
+                selectCSVFile();
+                return true;
+            case R.id.updateProducts:
+//                textViewContent.setText("Two was selected");
+//                Toast.makeText(this, "Two", Toast.LENGTH_LONG).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void selectCSVFile() {
@@ -52,7 +127,6 @@ public class ProductAdminActivity extends AppCompatActivity {
         intent.setType("text/*");
         startActivityForResult(intent, FILE_REQUEST_CODE);
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
@@ -141,4 +215,53 @@ public class ProductAdminActivity extends AppCompatActivity {
         }
     }
 
+    private void enableSwipeToDeleteAndUndo(final ProductAdminAdapter myAdapter) {
+        SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(this) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+
+                final int position = viewHolder.getAdapterPosition();
+                final Product product = myAdapter.getData().get(position);
+
+                myAdapter.removeItem(position);
+
+                Snackbar snackbar = Snackbar.make(constraintLayout, "Product has been removed from the store", Snackbar.LENGTH_LONG)
+                        .addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                            public void onDismissed(Snackbar transientBottomBar, int event) {
+                                if (event != DISMISS_EVENT_ACTION) {
+                                    // Dismiss wasn't because of tapping "UNDO"
+                                    // so here delete the item from databse
+                                    request.executePostRequest(url, new VolleyService.VolleyCallback() {
+                                        @Override
+                                        public void getResponse(String response) {
+                                            try {
+                                                if (response.equals("success")) {
+                                                    //Toast.makeText(RegistrationActivity.this, "You have successfully registered \n You will now be redirected to LogIn Page.", Toast.LENGTH_LONG).show();
+                                                } else {
+                                                    //Toast.makeText(RegistrationActivity.this, "Your account already exits.", Toast.LENGTH_LONG).show();
+                                                }
+                                                Log.d(TAG, response);
+                                            } catch (Exception ex) {
+                                                Log.e(TAG, ex.getMessage());
+                                            }
+                                        }
+                                    }, "productDelete", String.valueOf(product.getId()));
+                                }
+                            }
+                        })
+                        .setAction("UNDO", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                myAdapter.restoreItem(product, position);
+                                recyclerView.scrollToPosition(position);
+                            }
+                        });
+                snackbar.setActionTextColor(Color.WHITE);
+                snackbar.show();
+            }
+        };
+
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
+    }
 }

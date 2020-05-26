@@ -28,7 +28,7 @@ public class ProductCustomerActivity extends AppCompatActivity {
                 try {
                     Gson gson = new Gson();
                     Catalogue catalogue = gson.fromJson(response , Catalogue.class);
-                    ProductAdapter myAdapter = new ProductAdapter(catalogue.getProducts());
+                    ProductCustomerAdapter myAdapter = new ProductCustomerAdapter(catalogue.getProducts());
                     RecyclerView recyclerView = findViewById(R.id.recyclerViewProducts);
                     recyclerView.setLayoutManager(new LinearLayoutManager(ProductCustomerActivity.this));
                     recyclerView.setAdapter(myAdapter);
@@ -38,8 +38,5 @@ public class ProductCustomerActivity extends AppCompatActivity {
                 }
             }
         });
-
-
-
     }
 }

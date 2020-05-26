@@ -15,10 +15,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyCustomViewHolder> {
+public class ProductCustomerAdapter extends RecyclerView.Adapter<ProductCustomerAdapter.MyCustomViewHolder> {
     List<Product> productList;
 
-    public ProductAdapter(List<Product> productList) {
+    public ProductCustomerAdapter(List<Product> productList) {
         this.productList = productList;
     }
 

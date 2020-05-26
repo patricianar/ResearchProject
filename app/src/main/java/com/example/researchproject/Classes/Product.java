@@ -1,6 +1,7 @@
 package com.example.researchproject.Classes;
 
 public class Product {
+    private Boolean availability;
     private String barcode;
     private String brand_id; //int
     private String categories;  //number??
@@ -17,6 +18,7 @@ public class Product {
     private String url_image; //String
 
     public Product(String barcode, String brand_id, String categories, double cost_price, String description, int id, int inventory_level, int inventory_warning_level, String name, double price, String url_image) {
+        this.availability = true;
         this.barcode = barcode;
         this.brand_id = brand_id;
         this.categories = categories;
@@ -31,6 +33,14 @@ public class Product {
         this.review_message = "";
         this.reviews_rating_sum = 0;
         this.url_image = url_image;
+    }
+
+    public Boolean getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(Boolean availability) {
+        this.availability = availability;
     }
 
     public String getBarcode() {
