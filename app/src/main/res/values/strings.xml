@@ -11,5 +11,9 @@
     <string name="notification">Notification</string>
     <string name="addProducts">Add Products</string>
     <string name="updateProducts">Update products</string>
+    <string name="tvCostPrice">Cost Price</string>
+    <string name="tvPrice">Price</string>
+    <string name="tvInvLevel">Inventory Level</string>
+    <string name="tvInvWarnLevel">Inventory Warning Level</string>
 
 </resources>

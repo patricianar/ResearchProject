@@ -79,11 +79,11 @@ public class ProductDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         TextView tvProdName = view.findViewById(R.id.tvProdNameEdit);
-        EditText etProdDesc = view.findViewById(R.id.etProdDescEdit);
-        EditText etCostPrice = view.findViewById(R.id.etCostPrice);
-        EditText etPrice = view.findViewById(R.id.etPrice);
-        EditText etInvLevel = view.findViewById(R.id.etInvLevel);
-        EditText etInvWarnLevel = view.findViewById(R.id.etInvWarnLevel);
+        final EditText etProdDesc = view.findViewById(R.id.etProdDescEdit);
+        final EditText etCostPrice = view.findViewById(R.id.etCostPrice);
+        final EditText etPrice = view.findViewById(R.id.etPrice);
+        final EditText etInvLevel = view.findViewById(R.id.etInvLevel);
+        final EditText etInvWarnLevel = view.findViewById(R.id.etInvWarnLevel);
         ImageView imgProd = view.findViewById(R.id.imgProdEdit);
         ImageView imgClose = view.findViewById(R.id.imgClose);
         Button btnEditProd = view.findViewById(R.id.btnEditProduct);
@@ -108,6 +108,12 @@ public class ProductDetailFragment extends Fragment {
             public void onClick(View v) {
                 String url = "https://myprojectstore.000webhostapp.com/product/";
 
+                mParam1.setDescription(etProdDesc.getText().toString());
+                mParam1.setCost_price(Double.parseDouble(etCostPrice.getText().toString()));
+                mParam1.setPrice(Double.parseDouble(etPrice.getText().toString()));
+                mParam1.setInventory_level(Integer.parseInt(etInvLevel.getText().toString()));
+                mParam1.setInventory_warning_level(Integer.parseInt(etInvWarnLevel.getText().toString()));
+
                 Gson gson = new Gson();
                 final String jsonInString = gson.toJson(mParam1);
                 VolleyService request = new VolleyService(getContext());
@@ -121,7 +127,6 @@ public class ProductDetailFragment extends Fragment {
                             else{
                                 Toast.makeText(getContext(), "Something went wrong, please try again!" + response, Toast.LENGTH_SHORT).show();
                             }
-                            Log.e(TAG, response);
                         } catch (Exception ex) {
                             Log.e(TAG, ex.getMessage());
                         }
