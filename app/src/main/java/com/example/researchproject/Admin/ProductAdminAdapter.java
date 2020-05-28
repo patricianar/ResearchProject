@@ -7,6 +7,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.researchproject.Classes.Product;
@@ -61,13 +65,25 @@ public class ProductAdminAdapter extends RecyclerView.Adapter<ProductAdminAdapte
 
     public class MyCustomViewHolder extends RecyclerView.ViewHolder{
         TextView tvProductName, tvProductQty, tvProductPrice;
-        ImageView imgProduct, imgCheck;
+        ImageView imgProduct;
+        CardView cardView;
         public MyCustomViewHolder(@NonNull View itemView) {
             super(itemView);
             tvProductName = itemView.findViewById(R.id.tvProductName);
             tvProductQty = itemView.findViewById(R.id.tvProductQty);
             tvProductPrice = itemView.findViewById(R.id.tvProductPrice);
             imgProduct = itemView.findViewById(R.id.imgProduct);
+            cardView = itemView.findViewById(R.id.cardViewProdAdmin);
+
+            final FragmentManager manager =  ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager();
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentTransaction transaction = manager.beginTransaction();
+                    transaction.add(R.id.prodDetailFrag, ProductDetailFragment.newInstance(productList.get(getAdapterPosition())));
+                    transaction.commit();
+                }
+            });
         }
     }
 }

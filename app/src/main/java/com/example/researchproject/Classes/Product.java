@@ -1,6 +1,8 @@
 package com.example.researchproject.Classes;
 
-public class Product {
+import java.io.Serializable;
+
+public class Product implements Serializable {
     private Boolean availability;
     private String barcode;
     private String brand_id; //int
