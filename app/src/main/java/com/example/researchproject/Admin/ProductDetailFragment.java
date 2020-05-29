@@ -125,8 +125,9 @@ public class ProductDetailFragment extends Fragment {
                                 Toast.makeText(getContext(), "Product information has been successfully changed!", Toast.LENGTH_SHORT).show();
                             }
                             else{
-                                Toast.makeText(getContext(), "Something went wrong, please try again!" + response, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
                             }
+                            Log.d(TAG, response);
                         } catch (Exception ex) {
                             Log.e(TAG, ex.getMessage());
                         }
