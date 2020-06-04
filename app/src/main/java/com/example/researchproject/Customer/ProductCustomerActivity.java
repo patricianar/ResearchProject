@@ -21,6 +21,7 @@ public class ProductCustomerActivity extends AppCompatActivity {
 
         String url = "https://myprojectstore.000webhostapp.com/product";
 
+
         VolleyService request = new VolleyService(this);
         request.executeGetRequest(url, new VolleyService.VolleyCallback() {
             @Override

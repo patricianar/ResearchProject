@@ -138,7 +138,7 @@ public class ProductAdminActivity extends AppCompatActivity implements ProductDe
     private void selectCSVFile(int requestCode) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("text/*");
+        intent.setType("*/*");
         startActivityForResult(intent, requestCode);
     }
 
