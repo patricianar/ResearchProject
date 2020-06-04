@@ -9,25 +9,26 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.example.researchproject.Classes.Catalogue;
 import com.example.researchproject.Classes.Product;
-import com.example.researchproject.Customer.LoginActivity;
 import com.example.researchproject.Customer.ProductCustomerActivity;
-import com.example.researchproject.Customer.ProductCustomerAdapter;
-import com.example.researchproject.Customer.RegistrationActivity;
 import com.example.researchproject.R;
 import com.example.researchproject.SwipeToDeleteCallback;
 import com.example.researchproject.VolleyService;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
@@ -39,12 +40,16 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class ProductAdminActivity extends AppCompatActivity {
+public class ProductAdminActivity extends AppCompatActivity implements ProductDetailFragment.OnCardViewClickedListener,
+        AddProductFragment.OnCardViewClickedListener{
     private static final String TAG = "ProductAdminActivity";
-    private static final int FILE_REQUEST_CODE = 10;
+    private static final int FILE_REQUEST_CODE_ADD = 01;
+    private static final int FILE_REQUEST_CODE_UPDATE = 10;
     private ArrayList<Product> productsList = new ArrayList<>();
     ConstraintLayout constraintLayout;
     RecyclerView recyclerView;
+    BottomNavigationView bottomNavigationView;
+    FloatingActionButton fab;
     VolleyService request;
     String url;
 
@@ -56,14 +61,30 @@ public class ProductAdminActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         // Sets the Toolbar to act as the ActionBar for this Activity window.
         setSupportActionBar(toolbar);
+        toolbar.setTitle("");
+        toolbar.setLogo(R.mipmap.ic_launcher_round);
 
         constraintLayout = findViewById(R.id.layoutProdAdmin);
 
+        // Initialize BottomNavigationView
+        initBottomNavigationView();
+
         url = "https://myprojectstore.000webhostapp.com/product/";
         request = new VolleyService(ProductAdminActivity.this);
-
         getProducts();
+
+        fab = findViewById(R.id.fab);
+
+        //click listeners needs to be customized
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSupportFragmentManager().beginTransaction().add(R.id.prodDetailFrag, AddProductFragment.newInstance("1", "1")).commit();
+            }
+        });
     }
+
+
 
     private void getProducts() {
         request.executeGetRequest(url, new VolleyService.VolleyCallback() {
@@ -88,15 +109,9 @@ public class ProductAdminActivity extends AppCompatActivity {
     // Menu icons are inflated just as they were with actionbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu; this adds items to the action bar.
         getMenuInflater().inflate(R.menu.menu_admin, menu);
         return true;
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        getProducts();
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -110,29 +125,28 @@ public class ProductAdminActivity extends AppCompatActivity {
 //                Toast.makeText(this, "Delete", Toast.LENGTH_LONG).show();
                 return true;
             case R.id.addProducts:
-                selectCSVFile();
+                selectCSVFile(FILE_REQUEST_CODE_ADD);
                 return true;
             case R.id.updateProducts:
-//                textViewContent.setText("Two was selected");
-//                Toast.makeText(this, "Two", Toast.LENGTH_LONG).show();
+                selectCSVFile(FILE_REQUEST_CODE_UPDATE);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void selectCSVFile() {
+    private void selectCSVFile(int requestCode) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("text/*");
-        startActivityForResult(intent, FILE_REQUEST_CODE);
+        startActivityForResult(intent, requestCode);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent resultData) {
         super.onActivityResult(requestCode, resultCode, resultData);
-        if (requestCode == FILE_REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == FILE_REQUEST_CODE_ADD && resultCode == RESULT_OK) {
             // The result data contains a URI for the document or directory that
             // the user selected.
             Uri uri = null;
@@ -154,8 +168,9 @@ public class ProductAdminActivity extends AppCompatActivity {
                     @Override
                     public void getResponse(String response) {
                         try {
-                            if (response.equals("true")) {
+                            if (response.contains("true")) {
                                 Toast.makeText(ProductAdminActivity.this, "Your catalogue has been updated", Toast.LENGTH_SHORT).show();
+                                getProducts();
                                 final Intent productIntent = new Intent(ProductAdminActivity.this, ProductCustomerActivity.class);
 //                                Thread thread = new Thread() {
 //                                    @Override
@@ -263,5 +278,63 @@ public class ProductAdminActivity extends AppCompatActivity {
 
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
         itemTouchhelper.attachToRecyclerView(recyclerView);
+    }
+
+    /**
+     * Init BottomNavigationView with 4 items:
+     * home, orders, notifications, account
+     */
+    private void initBottomNavigationView() {
+        //Initialize and Assign variable
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        //Set Result Selector
+        bottomNavigationView.setSelectedItemId(R.id.home);
+
+        //Perform ItemSelectedListener
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                switch (item.getItemId()) {
+                    case R.id.home:
+                        startActivity(new Intent(getApplicationContext(), ProductAdminActivity.class));
+                        finish(); // avoid going back to the same selected tab many times - save memory
+                        return true;
+                    case R.id.orders:
+                        //startActivity(new Intent(getApplicationContext(), RegisterEvents.class));
+                        //finish();
+                        return true;
+                    case R.id.notification:
+                        //startActivity(new Intent(getApplicationContext(), EventsActivity.class));
+                        //finish();
+                        return true;
+                    case R.id.account:
+                        //startActivity(new Intent(getApplicationContext(), MyEventsActivity.class));
+                        //finish();
+                        return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public void onOpen() {
+        bottomNavigationView.setVisibility(View.GONE);
+        fab.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onClose() {
+        bottomNavigationView.setVisibility(View.VISIBLE);
+        fab.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+
     }
 }

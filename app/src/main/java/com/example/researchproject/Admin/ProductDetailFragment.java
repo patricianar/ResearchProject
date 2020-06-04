@@ -1,13 +1,11 @@
 package com.example.researchproject.Admin;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,10 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.researchproject.Classes.Customer;
 import com.example.researchproject.Classes.Product;
-import com.example.researchproject.Customer.LoginActivity;
-import com.example.researchproject.Customer.ProductCustomerActivity;
 import com.example.researchproject.R;
 import com.example.researchproject.VolleyService;
 import com.google.gson.Gson;
@@ -37,7 +32,7 @@ public class ProductDetailFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "product";
     private static final String TAG = "ProductDetailFragment";
-
+    OnCardViewClickedListener mListener;
     private Product mParam1;
 
     public ProductDetailFragment() {
@@ -72,12 +67,13 @@ public class ProductDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_product_detaiil, container, false);
+        return inflater.inflate(R.layout.fragment_product_detail, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mListener.onOpen();
         TextView tvProdName = view.findViewById(R.id.tvProdNameEdit);
         final EditText etProdDesc = view.findViewById(R.id.etProdDescEdit);
         final EditText etCostPrice = view.findViewById(R.id.etCostPrice);
@@ -100,6 +96,7 @@ public class ProductDetailFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 getActivity().getSupportFragmentManager().beginTransaction().remove(ProductDetailFragment.this).commit();
+                mListener.onClose();
             }
         });
 
@@ -135,5 +132,27 @@ public class ProductDetailFragment extends Fragment {
                 }, "editProduct", jsonInString);
             }
         });
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof OnCardViewClickedListener){
+            mListener = (OnCardViewClickedListener) context;
+        }else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnCardViewClickedListener{
+        void onOpen(); // hide bottom bar when cardView is clicked
+        void onClose(); // show bottom bar when cardView is clicked
     }
 }

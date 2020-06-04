@@ -12,10 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.researchproject.Admin.ProductAdminActivity;
-import com.example.researchproject.Classes.Customer;
 import com.example.researchproject.R;
 import com.example.researchproject.VolleyService;
-import com.google.gson.Gson;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "LoginActivity";

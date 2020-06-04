@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.researchproject.Classes.Product;
 import com.example.researchproject.R;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -67,6 +70,8 @@ public class ProductAdminAdapter extends RecyclerView.Adapter<ProductAdminAdapte
         TextView tvProductName, tvProductQty, tvProductPrice;
         ImageView imgProduct;
         CardView cardView;
+        RatingBar ratingBar;
+
         public MyCustomViewHolder(@NonNull View itemView) {
             super(itemView);
             tvProductName = itemView.findViewById(R.id.tvProductName);
@@ -74,6 +79,8 @@ public class ProductAdminAdapter extends RecyclerView.Adapter<ProductAdminAdapte
             tvProductPrice = itemView.findViewById(R.id.tvProductPrice);
             imgProduct = itemView.findViewById(R.id.imgProduct);
             cardView = itemView.findViewById(R.id.cardViewProdAdmin);
+            ratingBar = itemView.findViewById(R.id.ratingBar);
+            ratingBar.setRating(5);
 
             final FragmentManager manager =  ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager();
             cardView.setOnClickListener(new View.OnClickListener() {

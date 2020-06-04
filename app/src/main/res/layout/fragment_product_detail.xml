@@ -14,7 +14,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="TextView"
+        android:textColor="@color/colorPrimaryText"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,12 +26,24 @@
         android:id="@+id/imgProdEdit"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_marginTop="32dp"
-        android:src="@drawable/ic_launcher_foreground"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvProdNameEdit" />
+        app:layout_constraintTop_toBottomOf="@+id/tvProdNameEdit"
+        app:srcCompat="@drawable/ic_launcher_foreground" />
+
+    <TextView
+        android:id="@+id/line1"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgProdEdit" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgClose"
@@ -44,18 +58,36 @@
         android:layout_width="0dp"
         android:layout_height="100dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/tvCostPrice"
+        android:background="@android:color/transparent"
+        android:gravity="center|start"
+        android:textColor="@color/colorSecondaryText"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgProdEdit" />
+
+    <TextView
+        android:id="@+id/line2"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etProdDescEdit" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="160dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -73,7 +105,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="@string/tvCostPrice" />
+                android:text="@string/tvCostPrice"
+                android:textColor="@color/colorSecondaryText"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvPrice"
@@ -81,7 +116,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="@string/tvPrice" />
+                android:text="@string/tvPrice"
+                android:textColor="@color/colorSecondaryText"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvInvLevel"
@@ -89,7 +127,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="@string/tvInvLevel" />
+                android:text="@string/tvInvLevel"
+                android:textColor="@color/colorSecondaryText"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvInvWarnLevel"
@@ -97,7 +138,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="@string/tvInvWarnLevel" />
+                android:text="@string/tvInvWarnLevel"
+                android:textColor="@color/colorSecondaryText"
+                android:textSize="16sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -110,42 +154,67 @@
                 android:id="@+id/etCostPrice"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
+                android:background="@drawable/border"
                 android:ems="10"
-                android:inputType="numberDecimal" />
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:textColor="@color/colorSecondaryText"
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/etPrice"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
+                android:background="@drawable/border"
                 android:ems="10"
-                android:inputType="numberDecimal" />
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:textColor="@color/colorSecondaryText"
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/etInvLevel"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
+                android:background="@drawable/border"
                 android:ems="10"
-                android:inputType="number" />
+                android:gravity="center"
+                android:inputType="number"
+                android:textColor="@color/colorSecondaryText"
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/etInvWarnLevel"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
+                android:background="@drawable/border"
                 android:ems="10"
-                android:inputType="number" />
+                android:gravity="center"
+                android:inputType="number"
+                android:textColor="@color/colorSecondaryText"
+                android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>
 
     <Button
         android:id="@+id/btnEditProduct"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="48dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Button"
+        android:layout_marginEnd="16dp"
+        android:background="@color/colorAccent"
+        android:text="@string/submit"
+        android:textColor="@color/colorPrimary"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
