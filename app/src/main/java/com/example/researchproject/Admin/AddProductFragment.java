@@ -1,7 +1,11 @@
 package com.example.researchproject.Admin;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,52 +25,33 @@ import com.example.researchproject.R;
 import com.example.researchproject.VolleyService;
 import com.google.gson.Gson;
 
+import java.io.IOException;
+
+import static android.app.Activity.RESULT_OK;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link AddProductFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class AddProductFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "ProductAddFragment";
+    private static final int PICK_IMAGE_REQUEST = 11;
     OnCardViewClickedListener mListener;
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    ImageView imgProd;
 
     public AddProductFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AddProductFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AddProductFragment newInstance(String param1, String param2) {
+    public static AddProductFragment newInstance() {
         AddProductFragment fragment = new AddProductFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -89,16 +74,22 @@ public class AddProductFragment extends Fragment {
         final EditText etPrice = view.findViewById(R.id.etPrice);
         final EditText etInvLevel = view.findViewById(R.id.etInvLevel);
         final EditText etInvWarnLevel = view.findViewById(R.id.etInvWarnLevel);
-        ImageView imgProd = view.findViewById(R.id.imgProdEdit);
-//        ImageView imgClose = view.findViewById(R.id.imgClose);
+        imgProd = view.findViewById(R.id.imgProdEdit);
+        ImageView imgClose = view.findViewById(R.id.imgClose);
         Button btnEditProd = view.findViewById(R.id.btnEditProduct);
 
-        ImageView imgClose = view.findViewById(R.id.imgClose);
         imgClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getActivity().getSupportFragmentManager().beginTransaction().remove(AddProductFragment.this).commit();
                 mListener.onClose();
+            }
+        });
+
+        imgProd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectImage();
             }
         });
 
@@ -132,10 +123,6 @@ public class AddProductFragment extends Fragment {
                 }, "addProduct", jsonInString);
             }
         });
-
-
-
-
     }
 
     @Override
@@ -153,6 +140,42 @@ public class AddProductFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    private void selectImage() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // checking request code and result code
+        // if request code is PICK_IMAGE_REQUEST and resultCode is RESULT_OK
+        // then set image in the image view
+        if (resultCode == RESULT_OK) {
+            Uri filePath = null;
+            if (data != null) {
+                if (requestCode == PICK_IMAGE_REQUEST) {
+                    filePath = data.getData();
+                    try {
+                        // Setting image on image view using Bitmap
+                        Bitmap bitmap = MediaStore
+                                .Images
+                                .Media
+                                .getBitmap(
+                                        getActivity().getContentResolver(),
+                                        filePath);
+                        imgProd.setImageBitmap(bitmap);
+                    } catch (IOException e) {
+                        // Log the exception
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 
     public interface OnCardViewClickedListener{

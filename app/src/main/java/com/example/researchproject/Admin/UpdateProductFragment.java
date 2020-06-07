@@ -1,12 +1,16 @@
 package com.example.researchproject.Admin;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +27,10 @@ import com.example.researchproject.VolleyService;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+
+import static android.app.Activity.RESULT_OK;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link UpdateProductFragment#newInstance} factory method to
@@ -32,6 +40,8 @@ public class UpdateProductFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "product";
     private static final String TAG = "ProductDetailFragment";
+    private static final int PICK_IMAGE_REQUEST = 11;
+    ImageView imgProd;
     OnCardViewClickedListener mListener;
     private Product mParam1;
 
@@ -80,7 +90,7 @@ public class UpdateProductFragment extends Fragment {
         final EditText etPrice = view.findViewById(R.id.etPrice);
         final EditText etInvLevel = view.findViewById(R.id.etInvLevel);
         final EditText etInvWarnLevel = view.findViewById(R.id.etInvWarnLevel);
-        ImageView imgProd = view.findViewById(R.id.imgProdEdit);
+        imgProd = view.findViewById(R.id.imgProdEdit);
         ImageView imgClose = view.findViewById(R.id.imgClose);
         Button btnEditProd = view.findViewById(R.id.btnEditProduct);
 
@@ -97,6 +107,13 @@ public class UpdateProductFragment extends Fragment {
             public void onClick(View view) {
                 getActivity().getSupportFragmentManager().beginTransaction().remove(UpdateProductFragment.this).commit();
                 mListener.onClose();
+            }
+        });
+
+        imgProd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectImage();
             }
         });
 
@@ -118,10 +135,9 @@ public class UpdateProductFragment extends Fragment {
                     @Override
                     public void getResponse(String response) {
                         try {
-                            if(response.equals("true")){
+                            if (response.equals("true")) {
                                 Toast.makeText(getContext(), "Product information has been successfully changed!", Toast.LENGTH_SHORT).show();
-                            }
-                            else{
+                            } else {
                                 Toast.makeText(getContext(), "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
                             }
                             Log.d(TAG, response);
@@ -137,9 +153,9 @@ public class UpdateProductFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if(context instanceof OnCardViewClickedListener){
+        if (context instanceof OnCardViewClickedListener) {
             mListener = (OnCardViewClickedListener) context;
-        }else {
+        } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragInteractionListener");
         }
@@ -151,8 +167,45 @@ public class UpdateProductFragment extends Fragment {
         mListener = null;
     }
 
-    public interface OnCardViewClickedListener{
+    private void selectImage() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // checking request code and result code
+        // if request code is PICK_IMAGE_REQUEST and resultCode is RESULT_OK
+        // then set image in the image view
+        if (resultCode == RESULT_OK) {
+            Uri filePath = null;
+            if (data != null) {
+                if (requestCode == PICK_IMAGE_REQUEST) {
+                    filePath = data.getData();
+                    try {
+                        // Setting image on image view using Bitmap
+                        Bitmap bitmap = MediaStore
+                                .Images
+                                .Media
+                                .getBitmap(
+                                        getActivity().getContentResolver(),
+                                        filePath);
+                        imgProd.setImageBitmap(bitmap);
+                    } catch (IOException e) {
+                        // Log the exception
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    public interface OnCardViewClickedListener {
         void onOpen(); // hide bottom bar when cardView is clicked
+
         void onClose(); // show bottom bar when cardView is clicked
     }
 

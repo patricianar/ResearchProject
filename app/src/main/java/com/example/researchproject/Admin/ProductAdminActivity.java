@@ -73,14 +73,12 @@ public class ProductAdminActivity extends AppCompatActivity implements UpdatePro
 
         fab = findViewById(R.id.fab);
 
-        //click listeners needs to be customized
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getSupportFragmentManager().beginTransaction().add(R.id.prodDetailFrag, AddProductFragment.newInstance("1", "1")).commit();
+                getSupportFragmentManager().beginTransaction().add(R.id.prodDetailFrag, AddProductFragment.newInstance()).addToBackStack(null).commit();
             }
         });
-
     }
 
     private void getProducts() {

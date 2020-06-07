@@ -85,6 +85,7 @@ public class ProductAdminAdapter extends RecyclerView.Adapter<ProductAdminAdapte
                 public void onClick(View v) {
                     FragmentTransaction transaction = manager.beginTransaction();
                     transaction.add(R.id.prodDetailFrag, UpdateProductFragment.newInstance(productList.get(getAdapterPosition())));
+                    transaction.addToBackStack(null);
                     transaction.commit();
                 }
             });
