@@ -16,11 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.researchproject.Classes.Product;
 import com.example.researchproject.R;
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProductAdminAdapter extends RecyclerView.Adapter<ProductAdminAdapter.MyCustomViewHolder> {
@@ -87,7 +84,7 @@ public class ProductAdminAdapter extends RecyclerView.Adapter<ProductAdminAdapte
                 @Override
                 public void onClick(View v) {
                     FragmentTransaction transaction = manager.beginTransaction();
-                    transaction.add(R.id.prodDetailFrag, ProductDetailFragment.newInstance(productList.get(getAdapterPosition())));
+                    transaction.add(R.id.prodDetailFrag, UpdateProductFragment.newInstance(productList.get(getAdapterPosition())));
                     transaction.commit();
                 }
             });

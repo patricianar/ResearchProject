@@ -25,17 +25,17 @@ import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ProductDetailFragment#newInstance} factory method to
+ * Use the {@link UpdateProductFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProductDetailFragment extends Fragment {
+public class UpdateProductFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "product";
     private static final String TAG = "ProductDetailFragment";
     OnCardViewClickedListener mListener;
     private Product mParam1;
 
-    public ProductDetailFragment() {
+    public UpdateProductFragment() {
         // Required empty public constructor
     }
 
@@ -47,8 +47,8 @@ public class ProductDetailFragment extends Fragment {
      * @return A new instance of fragment ProductDetaiilFragment.
      */
 
-    public static ProductDetailFragment newInstance(Product param1) {
-        ProductDetailFragment fragment = new ProductDetailFragment();
+    public static UpdateProductFragment newInstance(Product param1) {
+        UpdateProductFragment fragment = new UpdateProductFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_PARAM1, param1);
         fragment.setArguments(args);
@@ -67,7 +67,7 @@ public class ProductDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_product_detail, container, false);
+        return inflater.inflate(R.layout.fragment_product_update, container, false);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class ProductDetailFragment extends Fragment {
         imgClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().getSupportFragmentManager().beginTransaction().remove(ProductDetailFragment.this).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().remove(UpdateProductFragment.this).commit();
                 mListener.onClose();
             }
         });
@@ -155,4 +155,5 @@ public class ProductDetailFragment extends Fragment {
         void onOpen(); // hide bottom bar when cardView is clicked
         void onClose(); // show bottom bar when cardView is clicked
     }
+
 }

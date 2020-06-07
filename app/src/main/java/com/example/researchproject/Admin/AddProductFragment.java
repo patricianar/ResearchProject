@@ -141,7 +141,7 @@ public class AddProductFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if(context instanceof ProductDetailFragment.OnCardViewClickedListener){
+        if(context instanceof UpdateProductFragment.OnCardViewClickedListener){
             mListener = (OnCardViewClickedListener) context;
         }else {
             throw new RuntimeException(context.toString()

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     android:clickable="true"
-    tools:context=".Admin.ProductDetailFragment">
+    tools:context=".Admin.UpdateProductFragment">
 
     <TextView
         android:id="@+id/tvProdNameEdit"
@@ -212,7 +212,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:background="@color/colorAccent"
-        android:text="@string/submit"
+        android:text="@string/update"
         android:textColor="@color/colorPrimary"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"

@@ -9,21 +9,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.researchproject.Classes.Catalogue;
 import com.example.researchproject.Classes.Product;
-import com.example.researchproject.Customer.ProductCustomerActivity;
 import com.example.researchproject.R;
 import com.example.researchproject.SwipeToDeleteCallback;
 import com.example.researchproject.VolleyService;
@@ -40,8 +37,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class ProductAdminActivity extends AppCompatActivity implements ProductDetailFragment.OnCardViewClickedListener,
+public class ProductAdminActivity extends AppCompatActivity implements UpdateProductFragment.OnCardViewClickedListener,
         AddProductFragment.OnCardViewClickedListener{
+
     private static final String TAG = "ProductAdminActivity";
     private static final int FILE_REQUEST_CODE_ADD = 01;
     private static final int FILE_REQUEST_CODE_UPDATE = 10;
@@ -82,9 +80,8 @@ public class ProductAdminActivity extends AppCompatActivity implements ProductDe
                 getSupportFragmentManager().beginTransaction().add(R.id.prodDetailFrag, AddProductFragment.newInstance("1", "1")).commit();
             }
         });
+
     }
-
-
 
     private void getProducts() {
         request.executeGetRequest(url, new VolleyService.VolleyCallback() {
@@ -146,57 +143,61 @@ public class ProductAdminActivity extends AppCompatActivity implements ProductDe
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent resultData) {
         super.onActivityResult(requestCode, resultCode, resultData);
-        if (requestCode == FILE_REQUEST_CODE_ADD && resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             // The result data contains a URI for the document or directory that
             // the user selected.
             Uri uri = null;
             if (resultData != null) {
                 uri = resultData.getData();
 
-                readCSVFromUri(uri);
-
-                String url = "https://myprojectstore.000webhostapp.com/product/";
-
                 Catalogue catalogue = new Catalogue();
-                catalogue.setProducts(productsList);
-
                 Gson gson = new Gson();
-                String jsonCatalogue = gson.toJson(catalogue);
 
-                VolleyService request = new VolleyService(ProductAdminActivity.this);
-                request.executePostRequest(url, new VolleyService.VolleyCallback() {
-                    @Override
-                    public void getResponse(String response) {
-                        try {
-                            if (response.contains("true")) {
-                                Toast.makeText(ProductAdminActivity.this, "Your catalogue has been updated", Toast.LENGTH_SHORT).show();
-                                getProducts();
-                                final Intent productIntent = new Intent(ProductAdminActivity.this, ProductCustomerActivity.class);
-//                                Thread thread = new Thread() {
-//                                    @Override
-//                                    public void run() {
-//                                        try {
-//                                            Thread.sleep(3500); // wait before going to products
-//                                            startActivity(productIntent);
-//                                        } catch (Exception e) {
-//                                            e.printStackTrace();
-//                                        }
-//                                    }
-//                                };
-//                                thread.start();
+                if(requestCode == FILE_REQUEST_CODE_ADD) {
+                    readCSVAddProducts(uri);
+                    catalogue.setProducts(productsList);
+                    String jsonCatalogue = gson.toJson(catalogue);
+                    request.executePostRequest(url, new VolleyService.VolleyCallback() {
+                        @Override
+                        public void getResponse(String response) {
+                            try {
+                                if (response.equals("true")) {
+                                    Toast.makeText(ProductAdminActivity.this, "Your catalogue has been updated", Toast.LENGTH_SHORT).show();
+                                    getProducts();
+                                }
+                                productsList.clear();
+                                Log.d(TAG, response);
+                            } catch (Exception ex) {
+                                Log.e(TAG, ex.getMessage());
                             }
-                            productsList.clear();
-                            Log.d(TAG, response);
-                        } catch (Exception ex) {
-                            Log.e(TAG, ex.getMessage());
                         }
-                    }
-                }, "products", jsonCatalogue);
+                    }, "products", jsonCatalogue);
+                }
+                else if(requestCode == FILE_REQUEST_CODE_UPDATE){
+                    readCSVUpdateProducts(uri);
+                    catalogue.setProducts(productsList);
+                    String jsonCatalogue = gson.toJson(catalogue);
+                    request.executePostRequest(url, new VolleyService.VolleyCallback() {
+                        @Override
+                        public void getResponse(String response) {
+                            try {
+                                if (response.contains("true")) {
+                                    Toast.makeText(ProductAdminActivity.this, "Your catalogue has been updated", Toast.LENGTH_SHORT).show();
+                                    getProducts();
+                                }
+                                productsList.clear();
+                                Log.d(TAG, response);
+                            } catch (Exception ex) {
+                                Log.e(TAG, ex.getMessage());
+                            }
+                        }
+                    }, "editProductByList", jsonCatalogue);
+                }
             }
         }
     }
 
-    private void readCSVFromUri(Uri uri) {
+    private void readCSVAddProducts(Uri uri) {
         try {
             InputStream inputStream = getContentResolver().openInputStream(uri);
             BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(inputStream)));
@@ -207,7 +208,6 @@ public class ProductAdminActivity extends AppCompatActivity implements ProductDe
             }
             while ((line = reader.readLine()) != null) {
                 String[] row = line.split(",");
-                Log.e("test", row[1]);
                 String barcode = row[0];
                 String brand = row[1];
                 String category = row[2];
@@ -221,6 +221,36 @@ public class ProductAdminActivity extends AppCompatActivity implements ProductDe
                 String urlImg = row[10];
 
                 Product product = new Product(barcode, brand, category, costPrice, description, id, invLevel, invWarnLevel, name, price, urlImg);
+                productsList.add(product);
+            }
+        } catch (IOException ex) {
+            throw new RuntimeException("Error reading file..." + ex.getMessage());
+        } catch (NumberFormatException ex) {
+            throw new RuntimeException("Error in id parsing..." + ex.getMessage());
+        }
+    }
+
+    private void readCSVUpdateProducts(Uri uri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(inputStream)));
+
+            String line;
+            if ((line = reader.readLine()) != null) {
+//                //here csv Line contains the header line and can be used if needed
+            }
+            while ((line = reader.readLine()) != null) {
+                String[] row = line.split(",");
+                Boolean availability = Boolean.parseBoolean(row[0]);
+                String barcode = row[1];
+                Double costPrice = Double.parseDouble(row[2]);
+                String description = row[3];
+                int id = Integer.parseInt(row[4]);
+                int invLevel = Integer.parseInt(row[5]);
+                int invWarnLevel = Integer.parseInt(row[6]);
+                Double price = Double.parseDouble(row[7]);
+
+                Product product = new Product(availability, barcode, costPrice, description, id, invLevel, invWarnLevel, price);
                 productsList.add(product);
             }
         } catch (IOException ex) {
@@ -329,12 +359,11 @@ public class ProductAdminActivity extends AppCompatActivity implements ProductDe
     public void onClose() {
         bottomNavigationView.setVisibility(View.VISIBLE);
         fab.setVisibility(View.VISIBLE);
+        getProducts();
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
-
     }
 }

@@ -37,6 +37,24 @@ public class Product implements Serializable {
         this.url_image = url_image;
     }
 
+    public Product(Boolean availability, String barcode, Double cost_price, String description, int id, int inventory_level, int inventory_warning_level, Double price) {
+        this.availability = availability;
+        this.barcode = barcode;
+        this.brand_id = "";
+        this.categories = "";
+        this.cost_price = cost_price;
+        this.description = description;
+        this.id = id;
+        this.inventory_level = inventory_level;
+        this.inventory_warning_level = inventory_warning_level;
+        this.name = "";
+        this.price = price;
+        this.reviews_count = 0;
+        this.review_message = "";
+        this.reviews_rating_sum = 0;
+        this.url_image = "";
+    }
+
     public Boolean getAvailability() {
         return availability;
     }
