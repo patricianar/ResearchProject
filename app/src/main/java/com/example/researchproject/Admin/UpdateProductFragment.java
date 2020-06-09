@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.example.researchproject.VolleyService;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import static android.app.Activity.RESULT_OK;
@@ -43,6 +45,7 @@ public class UpdateProductFragment extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 11;
     ImageView imgProd;
     OnCardViewClickedListener mListener;
+    String encodedImage;
     private Product mParam1;
 
     public UpdateProductFragment() {
@@ -94,6 +97,7 @@ public class UpdateProductFragment extends Fragment {
         ImageView imgClose = view.findViewById(R.id.imgClose);
         Button btnEditProd = view.findViewById(R.id.btnEditProduct);
 
+        encodedImage = mParam1.getUrl_image();
         tvProdName.setText(mParam1.getName());
         etProdDesc.setText(mParam1.getDescription());
         etCostPrice.setText(String.valueOf(mParam1.getCost_price()));
@@ -120,13 +124,15 @@ public class UpdateProductFragment extends Fragment {
         btnEditProd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = "https://myprojectstore.000webhostapp.com/product/";
+                //String url = "https://myprojectstore.000webhostapp.com/product/";
+                String url = "http://100.25.155.48/product/";
 
                 mParam1.setDescription(etProdDesc.getText().toString());
                 mParam1.setCost_price(Double.parseDouble(etCostPrice.getText().toString()));
                 mParam1.setPrice(Double.parseDouble(etPrice.getText().toString()));
                 mParam1.setInventory_level(Integer.parseInt(etInvLevel.getText().toString()));
                 mParam1.setInventory_warning_level(Integer.parseInt(etInvWarnLevel.getText().toString()));
+                mParam1.setUrl_image(encodedImage);
 
                 Gson gson = new Gson();
                 final String jsonInString = gson.toJson(mParam1);
@@ -187,13 +193,14 @@ public class UpdateProductFragment extends Fragment {
                     filePath = data.getData();
                     try {
                         // Setting image on image view using Bitmap
-                        Bitmap bitmap = MediaStore
-                                .Images
-                                .Media
-                                .getBitmap(
-                                        getActivity().getContentResolver(),
-                                        filePath);
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
                         imgProd.setImageBitmap(bitmap);
+
+                        //Converting Bitmap to string
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                        byte[] imageBytes = baos.toByteArray();
+                        encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
                     } catch (IOException e) {
                         // Log the exception
                         e.printStackTrace();

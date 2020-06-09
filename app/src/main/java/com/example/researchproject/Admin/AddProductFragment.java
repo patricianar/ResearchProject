@@ -96,7 +96,8 @@ public class AddProductFragment extends Fragment {
         btnEditProd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = "https://myprojectstore.000webhostapp.com/product/";
+                //String url = "https://myprojectstore.000webhostapp.com/product/";
+                String url = "http://100.25.155.48/product/";
 
                 Product newProduct = new Product("adfdf","23",etCategory.getText().toString(),Double.parseDouble(etCostPrice.getText().toString()),
                         etProdDesc.getText().toString(),300,Integer.parseInt(etInvLevel.getText().toString()),Integer.parseInt(etInvWarnLevel.getText().toString()),
@@ -162,12 +163,7 @@ public class AddProductFragment extends Fragment {
                     filePath = data.getData();
                     try {
                         // Setting image on image view using Bitmap
-                        Bitmap bitmap = MediaStore
-                                .Images
-                                .Media
-                                .getBitmap(
-                                        getActivity().getContentResolver(),
-                                        filePath);
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
                         imgProd.setImageBitmap(bitmap);
                     } catch (IOException e) {
                         // Log the exception
