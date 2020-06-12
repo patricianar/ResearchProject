@@ -40,7 +40,7 @@ public class ProductAdminAdapter extends RecyclerView.Adapter<ProductAdminAdapte
     public void onBindViewHolder(@NonNull MyCustomViewHolder holder, int position) {
         holder.tvProductName.setText(productList.get(position).getName());
         holder.tvProductQty.setText(String.valueOf(productList.get(position).getInventory_level()));
-        holder.tvProductPrice.setText(String.valueOf(productList.get(position).getPrice()));
+        holder.tvProductPrice.setText("$" + productList.get(position).getPrice());
         Picasso.get().load(productList.get(position).getUrl_image()).into(holder.imgProduct);
     }
 

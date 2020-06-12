@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.example.researchproject.R;
 import com.example.researchproject.VolleyService;
 import com.google.gson.Gson;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import static android.app.Activity.RESULT_OK;
@@ -37,8 +39,9 @@ import static android.app.Activity.RESULT_OK;
 public class AddProductFragment extends Fragment {
     private static final String TAG = "ProductAddFragment";
     private static final int PICK_IMAGE_REQUEST = 11;
-    OnCardViewClickedListener mListener;
-    ImageView imgProd;
+    private OnCardViewClickedListener mListener;
+    private ImageView imgProd;
+    String encodedImage;
 
     public AddProductFragment() {
         // Required empty public constructor
@@ -99,9 +102,9 @@ public class AddProductFragment extends Fragment {
                 //String url = "https://myprojectstore.000webhostapp.com/product/";
                 String url = "http://100.25.155.48/product/";
 
-                Product newProduct = new Product("adfdf","23",etCategory.getText().toString(),Double.parseDouble(etCostPrice.getText().toString()),
+                Product newProduct = new Product("adfdf",etProdBand.getText().toString(),etCategory.getText().toString(),Double.parseDouble(etCostPrice.getText().toString()),
                         etProdDesc.getText().toString(),300,Integer.parseInt(etInvLevel.getText().toString()),Integer.parseInt(etInvWarnLevel.getText().toString()),
-                        tvProdName.getText().toString(),Double.parseDouble(etPrice.getText().toString()),"adf");
+                        tvProdName.getText().toString(),Double.parseDouble(etPrice.getText().toString()),encodedImage);
 
                 Gson gson = new Gson();
                 final String jsonInString = gson.toJson(newProduct);
@@ -165,6 +168,12 @@ public class AddProductFragment extends Fragment {
                         // Setting image on image view using Bitmap
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
                         imgProd.setImageBitmap(bitmap);
+
+                        //Converting Bitmap to string
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                        byte[] imageBytes = baos.toByteArray();
+                        encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
                     } catch (IOException e) {
                         // Log the exception
                         e.printStackTrace();

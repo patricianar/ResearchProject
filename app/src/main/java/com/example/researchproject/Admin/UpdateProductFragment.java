@@ -41,11 +41,11 @@ import static android.app.Activity.RESULT_OK;
 public class UpdateProductFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "product";
-    private static final String TAG = "ProductDetailFragment";
+    private static final String TAG = "UpdateProductFragment";
     private static final int PICK_IMAGE_REQUEST = 11;
-    ImageView imgProd;
-    OnCardViewClickedListener mListener;
-    String encodedImage;
+    private ImageView imgProd;
+    private OnCardViewClickedListener mListener;
+    private String encodedImage;
     private Product mParam1;
 
     public UpdateProductFragment() {

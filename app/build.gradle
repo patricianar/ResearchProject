@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.researchproject"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -51,5 +51,6 @@ dependencies {
     // Google Material resources
     implementation 'com.google.android.material:material:1.2.0-beta01'
 
-
+    //Cart
+    implementation 'com.github.nikartm:image-support:1.0.5'
 }
