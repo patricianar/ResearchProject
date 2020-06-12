@@ -200,6 +200,7 @@ public class UpdateProductFragment extends Fragment {
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
                         byte[] imageBytes = baos.toByteArray();
+
                         encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
                     } catch (IOException e) {
                         // Log the exception

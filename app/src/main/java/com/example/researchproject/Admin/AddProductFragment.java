@@ -172,6 +172,12 @@ public class AddProductFragment extends Fragment {
                         //Converting Bitmap to string
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                        int options = 90;
+                        while (baos.toByteArray().length / 1024 > 10) {  //Loop if compressed picture is greater than 400kb, than to compression
+                            baos.reset();//Reset baos is empty baos
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, options, baos);//The compression options%, storing the compressed data to the baos
+                            options -= 10;//Every time reduced by 10
+                        }
                         byte[] imageBytes = baos.toByteArray();
                         encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
                     } catch (IOException e) {
