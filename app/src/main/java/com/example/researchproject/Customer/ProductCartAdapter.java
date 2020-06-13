@@ -1,5 +1,6 @@
 package com.example.researchproject.Customer;
 
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +17,13 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.MyCustomViewHolder> {
     List<Product> productList;
     private Callback listener;
 
-    public void setListener(Callback listener)    {
+    public void setListener(Callback listener) {
         this.listener = listener;
     }
 
@@ -40,7 +43,7 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
     @Override
     public void onBindViewHolder(@NonNull MyCustomViewHolder holder, int position) {
         holder.tvProductName.setText(productList.get(position).getName());
-        holder.tvProductPrice.setText(String.valueOf(productList.get(position).getPrice()));
+        holder.tvProductPrice.setText(String.format("$%s", productList.get(position).getPrice()));
         Picasso.get().load(productList.get(position).getUrl_image()).into(holder.imgProduct);
     }
 
@@ -49,33 +52,57 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
         return productList.size();
     }
 
-    public class MyCustomViewHolder extends RecyclerView.ViewHolder{
-        TextView tvProductName, tvProductPrice;
+    public class MyCustomViewHolder extends RecyclerView.ViewHolder {
+        TextView tvProductName, tvProductPrice, tvProductQty, tvTotalPrice;
         ImageView imgProduct;
-        Button btnAddToCart;
+        Button btnMinus, btnPlus;
+        int qty;
 
         public MyCustomViewHolder(@NonNull View itemView) {
             super(itemView);
             tvProductName = itemView.findViewById(R.id.tvProductName);
             tvProductPrice = itemView.findViewById(R.id.tvProductPrice);
+            tvProductQty = itemView.findViewById(R.id.tvProductQty);
+            tvTotalPrice = itemView.findViewById(R.id.tvTotalPrice);
             imgProduct = itemView.findViewById(R.id.imgProduct);
-            btnAddToCart = itemView.findViewById(R.id.btnAddToCart);
 
-            btnAddToCart.setOnClickListener(new View.OnClickListener() {
+            final SharedPreferences sharedPref = itemView.getContext().getSharedPreferences("Cart", MODE_PRIVATE);
+            qty = sharedPref.getInt(String.valueOf(productList.get(getAdapterPosition()).getId()), 0);
+            tvProductQty.setText(String.valueOf(qty));
+
+            double total = qty * productList.get(getAdapterPosition()).getPrice();
+            tvTotalPrice.setText(String.format("$%s", total));
+
+            final SharedPreferences.Editor editor = sharedPref.edit();
+
+            btnMinus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(listener!=null)
-                    {
-                        //change number on cart icon and add product to cart(firebase)
-                        listener.onAddClick(productList.get(getAdapterPosition()).getId());
+                    qty--;
+                    if(qty > 0){
+                        tvProductQty.setText(String.valueOf(qty));
+                        editor.putInt(String.valueOf(productList.get(getAdapterPosition()).getId()), qty);
+                        editor.apply();
                     }
+                    else{
+                        //ask to remove product
+                    }
+                }
+            });
+
+            btnPlus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    qty++;
+                    tvProductQty.setText(String.valueOf(qty));
+                    editor.putInt(String.valueOf(productList.get(getAdapterPosition()).getId()), qty);
+                    editor.apply();
                 }
             });
         }
     }
 
-    public interface Callback
-    {
+    public interface Callback {
         public void onAddClick(int id);
     }
 }

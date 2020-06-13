@@ -6,6 +6,7 @@ import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -20,6 +21,9 @@ import com.example.researchproject.Classes.Product;
 import com.example.researchproject.R;
 import com.example.researchproject.VolleyService;
 import com.google.gson.Gson;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import ru.nikartm.support.ImageBadgeView;
 
@@ -40,7 +44,7 @@ public class ProductCustomerActivity extends AppCompatActivity implements Produc
         toolbar.setTitle("");
         toolbar.setLogo(R.mipmap.ic_launcher_round);
 
-        url = "http://100.25.155.48/product/";
+        url = "https://myprojectstore.000webhostapp.com/product/";
         request = new VolleyService(this);
         getProducts();
     }
@@ -88,7 +92,7 @@ public class ProductCustomerActivity extends AppCompatActivity implements Produc
 
             case R.id.cart:
                 //textViewContent.setText("Search was selected");
-                Toast.makeText(this, "Search", Toast.LENGTH_LONG).show();
+                getSupportFragmentManager().beginTransaction().add(R.id.frameCustomer, CartFragment.newInstance()).commit();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -100,23 +104,12 @@ public class ProductCustomerActivity extends AppCompatActivity implements Produc
         int newBadgeValue = badgeView.getBadgeValue() + 1;
         badgeView.setBadgeValue(newBadgeValue);
 
-        String url = "http://100.25.155.48/customer/";
-
-        VolleyService request = new VolleyService(this);
-        request.executePostRequest(url, new VolleyService.VolleyCallback() {
-            @Override
-            public void getResponse(String response) {
-                try {
-//                    if (response.equals("true")) {
-//                        Toast.makeText(getContext(), "New Product has been added!", Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        Toast.makeText(getContext(), "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
-//                    }
-                    Log.d(TAG, response);
-                } catch (Exception ex) {
-                    Log.e(TAG, ex.getMessage());
-                }
-            }
-        }, "addProductToCart", String.valueOf(id));
+        SharedPreferences sharedPref = getSharedPreferences("Cart", MODE_PRIVATE);
+        int qty = sharedPref.getInt(String.valueOf(id), 0);
+        //add qty of products
+        qty++;
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(String.valueOf(id), qty);
+        editor.apply();
     }
 }
