@@ -16,7 +16,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class ProductCustomerAdapter extends RecyclerView.Adapter<ProductCustomerAdapter.MyCustomViewHolder> {
+public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.MyCustomViewHolder> {
     List<Product> productList;
     private Callback listener;
 
@@ -24,7 +24,7 @@ public class ProductCustomerAdapter extends RecyclerView.Adapter<ProductCustomer
         this.listener = listener;
     }
 
-    public ProductCustomerAdapter(List<Product> productList) {
+    public ProductCartAdapter(List<Product> productList) {
         this.productList = productList;
     }
 
@@ -32,7 +32,7 @@ public class ProductCustomerAdapter extends RecyclerView.Adapter<ProductCustomer
     @Override
     public MyCustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.product_item_customer, parent, false);
+        View view = inflater.inflate(R.layout.product_item_cart, parent, false);
         MyCustomViewHolder myCustomViewHolder = new MyCustomViewHolder(view);
         return myCustomViewHolder;
     }

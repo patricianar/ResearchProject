@@ -143,6 +143,7 @@ public class UpdateProductFragment extends Fragment {
                         try {
                             if (response.equals("true")) {
                                 Toast.makeText(getContext(), "Product information has been successfully changed!", Toast.LENGTH_SHORT).show();
+
                             } else {
                                 Toast.makeText(getContext(), "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
                             }

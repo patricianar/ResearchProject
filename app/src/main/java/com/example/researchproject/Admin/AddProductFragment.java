@@ -22,6 +22,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.researchproject.Classes.Product;
+import com.example.researchproject.Customer.LoginActivity;
+import com.example.researchproject.Customer.RegistrationActivity;
 import com.example.researchproject.R;
 import com.example.researchproject.VolleyService;
 import com.google.gson.Gson;
@@ -115,8 +117,21 @@ public class AddProductFragment extends Fragment {
                         try {
                             if(response.equals("true")){
                                 Toast.makeText(getContext(), "New Product has been added!", Toast.LENGTH_SHORT).show();
+                                Thread thread = new Thread() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            Thread.sleep(3500); // wait before going to login
+                                            getActivity().getSupportFragmentManager().beginTransaction().remove(AddProductFragment.this).commit();
+                                            mListener.onClose();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                };
+                                thread.start();
                             }
-                            else{
+                            else {
                                 Toast.makeText(getContext(), "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
                             }
                             Log.d(TAG, response);
@@ -172,12 +187,6 @@ public class AddProductFragment extends Fragment {
                         //Converting Bitmap to string
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                        int options = 90;
-                        while (baos.toByteArray().length / 1024 > 10) {  //Loop if compressed picture is greater than 400kb, than to compression
-                            baos.reset();//Reset baos is empty baos
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, options, baos);//The compression options%, storing the compressed data to the baos
-                            options -= 10;//Every time reduced by 10
-                        }
                         byte[] imageBytes = baos.toByteArray();
                         encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
                     } catch (IOException e) {
