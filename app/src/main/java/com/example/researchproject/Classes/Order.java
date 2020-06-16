@@ -3,28 +3,19 @@ package com.example.researchproject.Classes;
 import java.util.List;
 
 public class Order {
-    private String cart_id;
     private Customer customer;
     private String customer_message;
     private String date_created;
     private String date_shipped;
     private int id;
-    private int items_total;
+//    private int items_total;
     private String payment_method;
-    private String payment_status;
+//    private String payment_status;
     private List<ProductOrdered> productsOrdered;
     private Double shipping_cost;
     private String status;
     private Double total;
     private Double total_tax;
-
-    public String getCart_id() {
-        return cart_id;
-    }
-
-    public void setCart_id(String cart_id) {
-        this.cart_id = cart_id;
-    }
 
     public Customer getCustomer() {
         return customer;
@@ -66,28 +57,12 @@ public class Order {
         this.id = id;
     }
 
-    public int getItems_total() {
-        return items_total;
-    }
-
-    public void setItems_total(int items_total) {
-        this.items_total = items_total;
-    }
-
     public String getPayment_method() {
         return payment_method;
     }
 
     public void setPayment_method(String payment_method) {
         this.payment_method = payment_method;
-    }
-
-    public String getPayment_status() {
-        return payment_status;
-    }
-
-    public void setPayment_status(String payment_status) {
-        this.payment_status = payment_status;
     }
 
     public List<ProductOrdered> getProductsOrdered() {

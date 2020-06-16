@@ -67,8 +67,8 @@ public class ProductAdminActivity extends AppCompatActivity implements UpdatePro
         // Initialize BottomNavigationView
         initBottomNavigationView();
 
-        //url = "https://myprojectstore.000webhostapp.com/product/";
-        url = "http://100.25.155.48/product/";
+        url = "https://myprojectstore.000webhostapp.com/product/";
+        //url = "http://100.25.155.48/product/";
         request = new VolleyService(ProductAdminActivity.this);
         getProducts();
 
@@ -361,8 +361,4 @@ public class ProductAdminActivity extends AppCompatActivity implements UpdatePro
         getProducts();
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
 }

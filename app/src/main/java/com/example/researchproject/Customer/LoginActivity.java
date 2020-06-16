@@ -3,6 +3,7 @@ package com.example.researchproject.Customer;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -62,6 +63,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             if(email.equals("admin@gmail.com")){
                                 startActivity(new Intent(LoginActivity.this, ProductAdminActivity.class));
                             }else{
+                                SharedPreferences sharedPref = getSharedPreferences("User", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPref.edit();
+                                editor.putString("Email", email);
+                                editor.apply();
                                 startActivity(new Intent(LoginActivity.this, ProductCustomerActivity.class));
                             }
                         }

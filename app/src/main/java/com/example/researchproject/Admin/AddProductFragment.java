@@ -22,8 +22,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.researchproject.Classes.Product;
-import com.example.researchproject.Customer.LoginActivity;
-import com.example.researchproject.Customer.RegistrationActivity;
 import com.example.researchproject.R;
 import com.example.researchproject.VolleyService;
 import com.google.gson.Gson;
@@ -80,7 +78,7 @@ public class AddProductFragment extends Fragment {
         final EditText etInvLevel = view.findViewById(R.id.etInvLevel);
         final EditText etInvWarnLevel = view.findViewById(R.id.etInvWarnLevel);
         imgProd = view.findViewById(R.id.imgProdEdit);
-        ImageView imgClose = view.findViewById(R.id.imgClose);
+        ImageView imgClose = view.findViewById(R.id.imgBack);
         Button btnEditProd = view.findViewById(R.id.btnEditProduct);
 
         imgClose.setOnClickListener(new View.OnClickListener() {
@@ -101,8 +99,8 @@ public class AddProductFragment extends Fragment {
         btnEditProd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //String url = "https://myprojectstore.000webhostapp.com/product/";
-                String url = "http://100.25.155.48/product/";
+                String url = "https://myprojectstore.000webhostapp.com/product/";
+                //String url = "http://100.25.155.48/product/";
 
                 Product newProduct = new Product("adfdf",etProdBand.getText().toString(),etCategory.getText().toString(),Double.parseDouble(etCostPrice.getText().toString()),
                         etProdDesc.getText().toString(),300,Integer.parseInt(etInvLevel.getText().toString()),Integer.parseInt(etInvWarnLevel.getText().toString()),

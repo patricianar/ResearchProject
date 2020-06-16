@@ -94,7 +94,7 @@ public class UpdateProductFragment extends Fragment {
         final EditText etInvLevel = view.findViewById(R.id.etInvLevel);
         final EditText etInvWarnLevel = view.findViewById(R.id.etInvWarnLevel);
         imgProd = view.findViewById(R.id.imgProdEdit);
-        ImageView imgClose = view.findViewById(R.id.imgClose);
+        ImageView imgClose = view.findViewById(R.id.imgBack);
         Button btnEditProd = view.findViewById(R.id.btnEditProduct);
 
         encodedImage = mParam1.getUrl_image();
@@ -124,8 +124,8 @@ public class UpdateProductFragment extends Fragment {
         btnEditProd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //String url = "https://myprojectstore.000webhostapp.com/product/";
-                String url = "http://100.25.155.48/product/";
+                String url = "https://myprojectstore.000webhostapp.com/product/";
+                //String url = "http://100.25.155.48/product/";
 
                 mParam1.setDescription(etProdDesc.getText().toString());
                 mParam1.setCost_price(Double.parseDouble(etCostPrice.getText().toString()));

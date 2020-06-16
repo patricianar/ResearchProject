@@ -1,6 +1,7 @@
 package com.example.researchproject.Customer;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +16,15 @@ import com.example.researchproject.Classes.Product;
 import com.example.researchproject.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
 public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.MyCustomViewHolder> {
-    List<Product> productList;
+    private List<Product> productList;
     private Callback listener;
-    SharedPreferences sharedPref;
+    private SharedPreferences sharedPref;
 
     public void setListener(Callback listener) {
         this.listener = listener;
@@ -82,14 +84,13 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
                 public void onClick(View v) {
                     qty = Integer.parseInt(tvProductQty.getText().toString());
                     qty--;
-                    if(qty > 0){
+                    if (qty > 0) {
                         tvProductQty.setText(String.valueOf(qty));
                         total = qty * productList.get(getAdapterPosition()).getPrice();
                         tvTotalPrice.setText(String.format("$%.2f", total));
                         editor.putInt(String.valueOf(productList.get(getAdapterPosition()).getId()), qty);
                         editor.apply();
-                    }
-                    else{
+                    } else {
                         //ask to remove product
                     }
                 }
@@ -107,7 +108,9 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
                     editor.apply();
                 }
             });
+
         }
+
     }
 
     public interface Callback {

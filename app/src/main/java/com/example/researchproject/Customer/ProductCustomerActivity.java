@@ -6,6 +6,7 @@ import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -77,6 +78,8 @@ public class ProductCustomerActivity extends AppCompatActivity implements Produc
         //menuItem.setActionView(R.layout.actionbar_badge_layout);
         badgeView = menuItem.getActionView().findViewById(R.id.ibv_icon);
         badgeView.setBadgeValue(0);
+
+        //we need this so we can get it onOptionsItemSelected
         menuItem.getActionView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,12 +90,11 @@ public class ProductCustomerActivity extends AppCompatActivity implements Produc
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.e("test", String.valueOf(item.getItemId()));
         switch (item.getItemId()) {
-
             case R.id.cart:
-                //textViewContent.setText("Search was selected");
-                getSupportFragmentManager().beginTransaction().add(R.id.frameCustomer, CartFragment.newInstance()).commit();
+                //getSupportFragmentManager().beginTransaction().add(R.id.frameCustomer, CartFragment.newInstance())
+                  //      .addToBackStack(null).commit();
+                startActivity(new Intent(ProductCustomerActivity.this, CartActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

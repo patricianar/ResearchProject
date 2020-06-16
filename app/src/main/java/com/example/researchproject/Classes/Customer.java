@@ -12,6 +12,10 @@ public class Customer
     private String password;
     private String phone;
 
+    public Customer()
+    {
+        //default constructor
+    }
     public Customer(String email, String first_name, String last_name, String password) {
         this.email = email;
         this.first_name = first_name;
