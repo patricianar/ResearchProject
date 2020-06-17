@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.researchproject.Admin.AddProductFragment;
 import com.example.researchproject.Classes.Catalogue;
 import com.example.researchproject.Classes.Customer;
 import com.example.researchproject.Classes.Order;
@@ -23,6 +24,8 @@ import com.example.researchproject.VolleyService;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -31,19 +34,22 @@ public class CartActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     TextView tvSubtotal;
     SharedPreferences sharedPref;
+    VolleyService request;
     List<Product> productsList;
+    double subTotal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
 
-        getProducts();
         recyclerView = findViewById(R.id.recyclerViewCart);
         tvSubtotal = findViewById(R.id.tvSubtotal);
         ImageView imgBack = findViewById(R.id.imgBack);
         Button btnPlaceOrder = findViewById(R.id.btnPlaceOrder);
         sharedPref = getSharedPreferences("Cart", MODE_PRIVATE);
+        request = new VolleyService(this);
+        getProducts();
 
          imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,18 +87,43 @@ public class CartActivity extends AppCompatActivity {
             prodOrdered.setQuantity(qty);
             prodOrderedList.add(prodOrdered);
         }
+        order.setProductsOrdered(prodOrderedList);
 
-//        private String customer_message;
-//        private String date_created;
-//        private String date_shipped;
-//        private int id;
-//        private String payment_method;
-//        private List<ProductOrdered> productsOrdered;
-//        private Double shipping_cost;
-//        private String status;
-//        private Double total;
-//        private Double total_tax;
+        double tax = subTotal * 0.05;
+        double total = subTotal + tax;
+        order.setTotal(total);
+        order.setTotal_tax(tax);
 
+        Gson gson = new Gson();
+        final String jsonInString = gson.toJson(order);
+        request.executePostRequest(url, new VolleyService.VolleyCallback() {
+            @Override
+            public void getResponse(String response) {
+                try {
+                    if(response.equals("true")){
+                        Toast.makeText(CartActivity.this, "Your order has been placed!", Toast.LENGTH_SHORT).show();
+                        Thread thread = new Thread() {
+                            @Override
+                            public void run() {
+                                try {
+                                    Thread.sleep(3500); // wait before going to order
+                                    finish();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        };
+                        thread.start();
+                    }
+                    else {
+                        Toast.makeText(CartActivity.this, "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
+                    }
+                    Log.d(TAG, response);
+                } catch (Exception ex) {
+                    Log.e(TAG, ex.getMessage());
+                }
+            }
+        }, "newOrder", jsonInString);
     }
 
     private void getProducts() {
@@ -108,7 +139,6 @@ public class CartActivity extends AppCompatActivity {
         productsIds = productsIds.substring(0, productsIds.length() - 1);
         Log.e("test", productsIds);
 
-        VolleyService request = new VolleyService(this);
         request.executePostRequest(url, new VolleyService.VolleyCallback() {
             @Override
             public void getResponse(String response) {
@@ -120,7 +150,6 @@ public class CartActivity extends AppCompatActivity {
                         ProductCartAdapter myAdapter = new ProductCartAdapter(productsList);
                         recyclerView.setLayoutManager(new LinearLayoutManager(CartActivity.this));
                         recyclerView.setAdapter(myAdapter);
-                        double subTotal = 0;
                         for(Product product: catalogue.getProducts()){
                             int qty = sharedPref.getInt(String.valueOf(product.getId()), 0);
                             subTotal += qty * product.getPrice();
