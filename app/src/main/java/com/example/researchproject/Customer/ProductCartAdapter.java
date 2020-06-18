@@ -27,10 +27,10 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.MyCustomViewHolder> {
     private List<Product> productList;
-    private Callback listener;
+    private CallbackCart listener;
     private SharedPreferences sharedPref;
 
-    public void setListener(Callback listener) {
+    public void setListener(CallbackCart listener) {
         this.listener = listener;
     }
 
@@ -101,6 +101,12 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
                         tvTotalPrice.setText(String.format("$%.2f", total));
                         editor.putInt(String.valueOf(productList.get(getAdapterPosition()).getId()), qty);
                         editor.apply();
+
+                        //update grand total
+                        if(listener!=null)
+                        {
+                            listener.onRemoveClick(productList.get(getAdapterPosition()).getPrice());
+                        }
                     } else {
                         //ask to remove product
                         Snackbar snackbar = Snackbar.make(constrainLayout, "Are you sure you want to delete the item from your cart?", Snackbar.LENGTH_LONG)
@@ -110,6 +116,11 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
                                         //delete from shared preferences
                                         editor.remove(String.valueOf(productList.get(getAdapterPosition()).getId()));
                                         editor.apply();
+                                        //update grand total
+                                        if(listener!=null)
+                                        {
+                                            listener.onRemoveClick(productList.get(getAdapterPosition()).getPrice());
+                                        }
                                         removeItem(getAdapterPosition());
                                     }
                                 });
@@ -128,6 +139,11 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
                     tvTotalPrice.setText(String.format("$%.2f", total));
                     editor.putInt(String.valueOf(productList.get(getAdapterPosition()).getId()), qty);
                     editor.apply();
+                    //update grand total
+                    if(listener!=null)
+                    {
+                        listener.onAddClick(productList.get(getAdapterPosition()).getPrice());
+                    }
                 }
             });
 
@@ -135,7 +151,8 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
 
     }
 
-    public interface Callback {
-        public void onAddClick(int id);
+    public interface CallbackCart {
+        void onAddClick(double total);
+        void onRemoveClick(double total);
     }
 }

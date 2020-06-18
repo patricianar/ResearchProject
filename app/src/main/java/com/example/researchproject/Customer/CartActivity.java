@@ -23,19 +23,21 @@ import com.example.researchproject.R;
 import com.example.researchproject.VolleyService;
 import com.google.gson.Gson;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class CartActivity extends AppCompatActivity {
+public class CartActivity extends AppCompatActivity implements ProductCartAdapter.CallbackCart {
     private static final String TAG = "CartActivity";
     RecyclerView recyclerView;
     TextView tvSubtotal;
     SharedPreferences sharedPref;
     VolleyService request;
     List<Product> productsList;
+    DecimalFormat decimalFormat;
     double subTotal;
 
     @Override
@@ -49,6 +51,7 @@ public class CartActivity extends AppCompatActivity {
         Button btnPlaceOrder = findViewById(R.id.btnPlaceOrder);
         sharedPref = getSharedPreferences("Cart", MODE_PRIVATE);
         request = new VolleyService(this);
+        decimalFormat = new DecimalFormat("$#.##");
         getProducts();
 
          imgBack.setOnClickListener(new View.OnClickListener() {
@@ -148,13 +151,14 @@ public class CartActivity extends AppCompatActivity {
                         Catalogue catalogue = gson.fromJson(response, Catalogue.class);
                         productsList = catalogue.getProducts();
                         ProductCartAdapter myAdapter = new ProductCartAdapter(productsList);
+                        myAdapter.setListener(CartActivity.this);
                         recyclerView.setLayoutManager(new LinearLayoutManager(CartActivity.this));
                         recyclerView.setAdapter(myAdapter);
                         for(Product product: catalogue.getProducts()){
                             int qty = sharedPref.getInt(String.valueOf(product.getId()), 0);
                             subTotal += qty * product.getPrice();
                         }
-                        tvSubtotal.setText(String.format("$%.2f", subTotal));
+                        tvSubtotal.setText(decimalFormat.format(subTotal));
                         //myAdapter.setListener(ProductCustomerActivity.this);
                     } else {
                         Toast.makeText(CartActivity.this, "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
@@ -165,5 +169,17 @@ public class CartActivity extends AppCompatActivity {
                 }
             }
         }, "productsCart", productsIds);
+    }
+
+    @Override
+    public void onAddClick(double total) {
+        subTotal += total;
+        tvSubtotal.setText(decimalFormat.format(subTotal));
+    }
+
+    @Override
+    public void onRemoveClick(double total) {
+        subTotal -= total;
+        tvSubtotal.setText(decimalFormat.format(subTotal));
     }
 }

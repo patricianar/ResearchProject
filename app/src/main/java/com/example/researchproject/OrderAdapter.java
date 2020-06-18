@@ -10,11 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.researchproject.Classes.Order;
-import com.example.researchproject.Classes.Product;
-
 import java.text.DecimalFormat;
-import java.util.List;
-
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.MyCustomViewHolder> {
     private Order[] ordersArray;
