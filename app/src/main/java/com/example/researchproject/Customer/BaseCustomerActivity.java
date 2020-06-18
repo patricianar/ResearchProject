@@ -62,8 +62,6 @@ class BaseCustomerActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.cart:
-                //getSupportFragmentManager().beginTransaction().add(R.id.frameCustomer, CartFragment.newInstance())
-                //      .addToBackStack(null).commit();
                 startActivity(new Intent(this, CartActivity.class));
                 return true;
             case R.id.logout:
@@ -84,7 +82,7 @@ class BaseCustomerActivity extends AppCompatActivity {
         Map<String, ?> keys = sharedPrefCart.getAll();
 
         Cart cart = new Cart();
-        cart.setEmail(sharedPrefCart.getString("Email", ""));
+        cart.setEmail(sharedPrefUser.getString("Email", ""));
 
         List<ProductOrdered> productsCart = new ArrayList<>();
         for (Map.Entry<String, ?> entry : keys.entrySet()) {
