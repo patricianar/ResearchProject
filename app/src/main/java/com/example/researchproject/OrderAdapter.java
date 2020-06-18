@@ -29,11 +29,11 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.MyCustomView
 
     @Override
     public void onBindViewHolder(@NonNull MyCustomViewHolder holder, int position) {
-        holder.tvOrderId.setText(String.valueOf(ordersArray[position].getId()));
-        holder.tvDate.setText(ordersArray[position].getDate_created());
-        holder.tvStatus.setText(ordersArray[position].getStatus());
+        holder.tvOrderId.setText("Order Id: " + ordersArray[position].getId());
+        holder.tvDate.setText("Order Date: " + ordersArray[position].getDate_created());
+        holder.tvStatus.setText("Status: " + ordersArray[position].getStatus());
         DecimalFormat decimalFormat = new DecimalFormat("$#.##");
-        holder.tvTotal.setText(decimalFormat.format(ordersArray[position].getTotal()));
+        holder.tvTotal.setText("Total: " + decimalFormat.format(ordersArray[position].getTotal()));
     }
 
     @Override
@@ -43,7 +43,6 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.MyCustomView
 
     class MyCustomViewHolder extends RecyclerView.ViewHolder {
         TextView tvOrderId, tvDate, tvStatus, tvTotal;
-        Button btnViewDetails;
 
         MyCustomViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -51,8 +50,6 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.MyCustomView
             tvDate = itemView.findViewById(R.id.tvDate);
             tvStatus = itemView.findViewById(R.id.tvStatus);
             tvTotal = itemView.findViewById(R.id.tvTotal);
-            btnViewDetails = itemView.findViewById(R.id.btnViewDetails);
         }
-
     }
 }

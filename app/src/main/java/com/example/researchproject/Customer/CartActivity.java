@@ -58,7 +58,6 @@ public class CartActivity extends AppCompatActivity implements ProductCartAdapte
             @Override
             public void onClick(View view) {
                 finish();
-                //mListener.onClose();
             }
         });
 

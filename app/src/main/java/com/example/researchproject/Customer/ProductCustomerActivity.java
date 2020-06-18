@@ -1,34 +1,20 @@
 package com.example.researchproject.Customer;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.researchproject.Classes.Catalogue;
-import com.example.researchproject.Classes.Product;
 import com.example.researchproject.R;
 import com.example.researchproject.VolleyService;
 import com.google.gson.Gson;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import ru.nikartm.support.ImageBadgeView;
 
-public class ProductCustomerActivity extends BaseActivity implements ProductCustomerAdapter.Callback {
+public class ProductCustomerActivity extends BaseCustomerActivity implements ProductCustomerAdapter.Callback {
     private static final String TAG = "ProductCustomerActivity";
     private ImageBadgeView badgeView;
     VolleyService request;

@@ -1,20 +1,23 @@
-package com.example.researchproject.Customer;
+package com.example.researchproject.Admin;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import com.example.researchproject.Customer.OrdersCustomerActivity;
 import com.example.researchproject.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import ru.nikartm.support.ImageBadgeView;
 
-class BaseActivity extends AppCompatActivity
+class BaseAdminActivity extends AppCompatActivity
 {
+    protected static final int FILE_REQUEST_CODE_ADD = 01;
+    protected static final int FILE_REQUEST_CODE_UPDATE = 10;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,43 +32,43 @@ class BaseActivity extends AppCompatActivity
         toolbar.setLogo(R.mipmap.ic_launcher_round);
     }
 
+    // Menu icons are inflated just as they were with actionbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_customer, menu);
-        final MenuItem menuItem = menu.findItem(R.id.cart);
-        //menuItem.setActionView(R.layout.actionbar_badge_layout);
-        ImageBadgeView badgeView = menuItem.getActionView().findViewById(R.id.ibv_icon);
-        badgeView.setBadgeValue(0);
-
-        //we need this so we can get it onOptionsItemSelected
-        menuItem.getActionView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BaseActivity.this.onOptionsItemSelected(menuItem);
-            }
-        });
+        // Inflate the menu; this adds items to the action bar.
+        getMenuInflater().inflate(R.menu.menu_admin, menu);
         return true;
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.cart:
-                //getSupportFragmentManager().beginTransaction().add(R.id.frameCustomer, CartFragment.newInstance())
-                //      .addToBackStack(null).commit();
-                startActivity(new Intent(this, CartActivity.class));
+            case R.id.search:
+                //textViewContent.setText("Search was selected");
+                //Toast.makeText(this, "Search", Toast.LENGTH_LONG).show();
                 return true;
-            case R.id.logout:
-                SharedPreferences sharedPref = getSharedPreferences("Cart", MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.clear();
-                editor.commit();
-                ///falta completar enviando a firebase el car
-                startActivity(new Intent(this, LoginActivity.class));
+            case R.id.orders:
+//                textViewContent.setText("Delete was selected");
+//                Toast.makeText(this, "Delete", Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.addProducts:
+                selectCSVFile(FILE_REQUEST_CODE_ADD);
+                return true;
+            case R.id.updateProducts:
+                selectCSVFile(FILE_REQUEST_CODE_UPDATE);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private void selectCSVFile(int requestCode) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+        startActivityForResult(intent, requestCode);
+    }
+
+
 
     /**
      * Init BottomNavigationView with 4 items:
@@ -84,11 +87,11 @@ class BaseActivity extends AppCompatActivity
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.home:
-                        startActivity(new Intent(getApplicationContext(), ProductCustomerActivity.class));
+                        startActivity(new Intent(getApplicationContext(), ProductAdminActivity.class));
                         finish(); // avoid going back to the same selected tab many times - save memory
                         return true;
                     case R.id.orders:
-                        startActivity(new Intent(getApplicationContext(), OrdersActivity.class));
+                        startActivity(new Intent(getApplicationContext(), OrdersAdminActivity.class));
                         finish();
                         return true;
                     case R.id.notification:

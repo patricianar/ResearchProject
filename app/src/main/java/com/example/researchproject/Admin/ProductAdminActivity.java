@@ -1,8 +1,6 @@
 package com.example.researchproject.Admin;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,10 +11,8 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.researchproject.Classes.Catalogue;
@@ -37,18 +33,16 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class ProductAdminActivity extends AppCompatActivity implements UpdateProductFragment.OnCardViewClickedListener,
+public class ProductAdminActivity extends BaseAdminActivity implements UpdateProductFragment.OnCardViewClickedListener,
         AddProductFragment.OnCardViewClickedListener{
-
-    private static final String TAG = "ProductAdminActivity";
-    private static final int FILE_REQUEST_CODE_ADD = 01;
-    private static final int FILE_REQUEST_CODE_UPDATE = 10;
     private ArrayList<Product> productsList = new ArrayList<>();
+    private static final String TAG = "ProductAdminActivity";
     ConstraintLayout constraintLayout;
     RecyclerView recyclerView;
     BottomNavigationView bottomNavigationView;
     FloatingActionButton fab;
     VolleyService request;
+
     String url;
 
     @Override
@@ -56,16 +50,20 @@ public class ProductAdminActivity extends AppCompatActivity implements UpdatePro
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_admin);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        // Sets the Toolbar to act as the ActionBar for this Activity window.
-        setSupportActionBar(toolbar);
-        toolbar.setTitle("");
-        toolbar.setLogo(R.mipmap.ic_launcher_round);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        // Sets the Toolbar to act as the ActionBar for this Activity window.
+//        setSupportActionBar(toolbar);
+//        toolbar.setTitle("");
+//        toolbar.setLogo(R.mipmap.ic_launcher_round);
+
+        initToolbar(R.id.toolbar);
+        initBottomNavigationView(R.id.bottom_navigation, R.id.home);
+
 
         constraintLayout = findViewById(R.id.layoutProdAdmin);
 
         // Initialize BottomNavigationView
-        initBottomNavigationView();
+        //initBottomNavigationView();
 
         url = "https://myprojectstore.000webhostapp.com/product/";
         //url = "http://100.25.155.48/product/";
@@ -100,42 +98,6 @@ public class ProductAdminActivity extends AppCompatActivity implements UpdatePro
                 }
             }
         });
-    }
-
-    // Menu icons are inflated just as they were with actionbar
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar.
-        getMenuInflater().inflate(R.menu.menu_admin, menu);
-        return true;
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.search:
-                //textViewContent.setText("Search was selected");
-                //Toast.makeText(this, "Search", Toast.LENGTH_LONG).show();
-                return true;
-            case R.id.orders:
-//                textViewContent.setText("Delete was selected");
-//                Toast.makeText(this, "Delete", Toast.LENGTH_LONG).show();
-                return true;
-            case R.id.addProducts:
-                selectCSVFile(FILE_REQUEST_CODE_ADD);
-                return true;
-            case R.id.updateProducts:
-                selectCSVFile(FILE_REQUEST_CODE_UPDATE);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void selectCSVFile(int requestCode) {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("*/*");
-        startActivityForResult(intent, requestCode);
     }
 
     @Override

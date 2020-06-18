@@ -63,10 +63,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             if(email.equals("admin@gmail.com")){
                                 startActivity(new Intent(LoginActivity.this, ProductAdminActivity.class));
                             }else{
-                                SharedPreferences sharedPref = getSharedPreferences("User", MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedPref.edit();
+                                SharedPreferences sharedPrefUser = getSharedPreferences("User", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPrefUser.edit();
                                 editor.putString("Email", email);
                                 editor.apply();
+                                SharedPreferences sharedPrefCart = getSharedPreferences("Cart", MODE_PRIVATE);
+                                if(sharedPrefCart.getAll().isEmpty())
+                                {
+
+                                }
                                 startActivity(new Intent(LoginActivity.this, ProductCustomerActivity.class));
                             }
                         }

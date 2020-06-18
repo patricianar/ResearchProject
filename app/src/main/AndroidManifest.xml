@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Customer.OrdersActivity"></activity>
+        <activity android:name=".Customer.OrdersCustomerActivity"></activity>
         <activity android:name=".Customer.CartActivity" />
         <activity android:name=".Customer.ProductCustomerActivity" />
         <activity android:name=".Customer.RegistrationActivity" />
@@ -27,6 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Admin.OrdersAdminActivity" />
     </application>
 
 </manifest>
