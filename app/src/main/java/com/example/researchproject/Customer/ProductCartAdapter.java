@@ -1,6 +1,7 @@
 package com.example.researchproject.Customer;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,13 +11,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.researchproject.Classes.Product;
 import com.example.researchproject.R;
+import com.example.researchproject.VolleyService;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -60,22 +64,29 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
         return productList.size();
     }
 
+    public void removeItem(int position) {
+        productList.remove(position);
+        notifyItemRemoved(position);
+    }
+
     public class MyCustomViewHolder extends RecyclerView.ViewHolder {
         TextView tvProductName, tvProductPrice, tvProductQty, tvTotalPrice;
         ImageView imgProduct;
         Button btnMinus, btnPlus;
+        ConstraintLayout constrainLayout;
         int qty;
         double total;
 
         public MyCustomViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvProductName = itemView.findViewById(R.id.tvProductName);
-            tvProductPrice = itemView.findViewById(R.id.tvProductPrice);
-            tvProductQty = itemView.findViewById(R.id.tvProductQty);
+            tvProductName = itemView.findViewById(R.id.tvOrderId);
+            tvProductPrice = itemView.findViewById(R.id.tvDate);
+            tvProductQty = itemView.findViewById(R.id.tvStatus);
             tvTotalPrice = itemView.findViewById(R.id.tvTotalPrice);
             imgProduct = itemView.findViewById(R.id.imgProduct);
             btnMinus = itemView.findViewById(R.id.btnMinus);
             btnPlus = itemView.findViewById(R.id.btnPlus);
+            constrainLayout = itemView.findViewById(R.id.constrainLayout);
 
             final SharedPreferences.Editor editor = sharedPref.edit();
 
@@ -92,6 +103,17 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
                         editor.apply();
                     } else {
                         //ask to remove product
+                        Snackbar snackbar = Snackbar.make(constrainLayout, "Are you sure you want to delete the item from your cart?", Snackbar.LENGTH_LONG)
+                                .setAction("YES", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        //delete from shared preferences
+                                        editor.remove(String.valueOf(productList.get(getAdapterPosition()).getId()));
+                                        editor.apply();
+                                        removeItem(getAdapterPosition());
+                                    }
+                                });
+                        snackbar.show();
                     }
                 }
             });

@@ -13,11 +13,12 @@
     app:cardElevation="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constrainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/tvProductName"
+            android:id="@+id/tvOrderId"
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_gravity="right"
@@ -41,12 +42,12 @@
             android:layout_marginBottom="8dp"
             android:layout_weight="1"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/tvProductPrice"
+            app:layout_constraintEnd_toStartOf="@+id/tvDate"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvProductPrice"
+            android:id="@+id/tvDate"
             android:layout_width="100dp"
             android:layout_height="30dp"
             android:layout_marginTop="16dp"
@@ -55,7 +56,7 @@
             android:textColor="@color/colorSecondaryText"
             android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@+id/btnMinus"
-            app:layout_constraintTop_toBottomOf="@+id/tvProductName" />
+            app:layout_constraintTop_toBottomOf="@+id/tvOrderId" />
 
         <Button
             android:id="@+id/btnMinus"
@@ -67,11 +68,11 @@
             android:gravity="center"
             android:text="-"
             android:textColor="@color/colorPrimary"
-            app:layout_constraintEnd_toStartOf="@+id/tvProductQty"
-            app:layout_constraintTop_toBottomOf="@+id/tvProductName" />
+            app:layout_constraintEnd_toStartOf="@+id/tvStatus"
+            app:layout_constraintTop_toBottomOf="@+id/tvOrderId" />
 
         <TextView
-            android:id="@+id/tvProductQty"
+            android:id="@+id/tvStatus"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="16dp"
@@ -80,7 +81,7 @@
             android:textColor="@color/colorSecondaryText"
             android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@+id/btnPlus"
-            app:layout_constraintTop_toBottomOf="@+id/tvProductName" />
+            app:layout_constraintTop_toBottomOf="@+id/tvOrderId" />
 
         <Button
             android:id="@+id/btnPlus"
@@ -93,7 +94,7 @@
             android:text="+"
             android:textColor="@color/colorPrimary"
             app:layout_constraintEnd_toStartOf="@+id/tvTotalPrice"
-            app:layout_constraintTop_toBottomOf="@+id/tvProductName" />
+            app:layout_constraintTop_toBottomOf="@+id/tvOrderId" />
 
         <TextView
             android:id="@+id/tvTotalPrice"
@@ -104,7 +105,7 @@
             android:gravity="center"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvProductName" />
+            app:layout_constraintTop_toBottomOf="@+id/tvOrderId" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

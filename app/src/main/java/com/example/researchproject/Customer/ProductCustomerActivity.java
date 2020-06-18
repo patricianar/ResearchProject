@@ -28,7 +28,7 @@ import java.util.Calendar;
 
 import ru.nikartm.support.ImageBadgeView;
 
-public class ProductCustomerActivity extends AppCompatActivity implements ProductCustomerAdapter.Callback {
+public class ProductCustomerActivity extends BaseActivity implements ProductCustomerAdapter.Callback {
     private static final String TAG = "ProductCustomerActivity";
     private ImageBadgeView badgeView;
     VolleyService request;
@@ -39,11 +39,8 @@ public class ProductCustomerActivity extends AppCompatActivity implements Produc
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_customer);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        // Sets the Toolbar to act as the ActionBar for this Activity window.
-        setSupportActionBar(toolbar);
-        toolbar.setTitle("");
-        toolbar.setLogo(R.mipmap.ic_launcher_round);
+        initToolbar(R.id.toolbar);
+        initBottomNavigationView(R.id.bottom_navigation, R.id.home);
 
         url = "https://myprojectstore.000webhostapp.com/product/";
         request = new VolleyService(this);
@@ -72,37 +69,10 @@ public class ProductCustomerActivity extends AppCompatActivity implements Produc
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_customer, menu);
-        final MenuItem menuItem = menu.findItem(R.id.cart);
-        //menuItem.setActionView(R.layout.actionbar_badge_layout);
-        badgeView = menuItem.getActionView().findViewById(R.id.ibv_icon);
-        badgeView.setBadgeValue(0);
-
-        //we need this so we can get it onOptionsItemSelected
-        menuItem.getActionView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ProductCustomerActivity.this.onOptionsItemSelected(menuItem);
-            }
-        });
-        return true;
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.cart:
-                //getSupportFragmentManager().beginTransaction().add(R.id.frameCustomer, CartFragment.newInstance())
-                  //      .addToBackStack(null).commit();
-                startActivity(new Intent(ProductCustomerActivity.this, CartActivity.class));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
     public void onAddClick(int id) {
+//        final MenuItem menuItem = menu.findItem(R.id.cart);
+        //menuItem.setActionView(R.layout.actionbar_badge_layout);
+        ImageBadgeView badgeView = findViewById(R.id.ibv_icon);
         int newBadgeValue = badgeView.getBadgeValue() + 1;
         badgeView.setBadgeValue(newBadgeValue);
 

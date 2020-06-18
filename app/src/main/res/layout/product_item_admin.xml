@@ -19,7 +19,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvProductName"
+            android:id="@+id/tvOrderId"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -33,7 +33,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvProductQty"
+            android:id="@+id/tvStatus"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -42,10 +42,10 @@
             android:textColor="@color/colorSecondaryText"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/imgProduct"
-            app:layout_constraintTop_toBottomOf="@+id/tvProductName" />
+            app:layout_constraintTop_toBottomOf="@+id/tvOrderId" />
 
         <TextView
-            android:id="@+id/tvProductPrice"
+            android:id="@+id/tvDate"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -54,7 +54,7 @@
             android:textColor="@color/colorSecondaryText"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/imgProduct"
-            app:layout_constraintTop_toBottomOf="@+id/tvProductQty" />
+            app:layout_constraintTop_toBottomOf="@+id/tvStatus" />
 
         <ImageView
             android:id="@+id/imgProduct"
@@ -84,7 +84,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
             app:layout_constraintStart_toEndOf="@+id/imgProduct"
-            app:layout_constraintTop_toBottomOf="@+id/tvProductPrice" />
+            app:layout_constraintTop_toBottomOf="@+id/tvDate" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

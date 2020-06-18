@@ -71,9 +71,9 @@ public class ProductAdminAdapter extends RecyclerView.Adapter<ProductAdminAdapte
 
         public MyCustomViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvProductName = itemView.findViewById(R.id.tvProductName);
-            tvProductQty = itemView.findViewById(R.id.tvProductQty);
-            tvProductPrice = itemView.findViewById(R.id.tvProductPrice);
+            tvProductName = itemView.findViewById(R.id.tvOrderId);
+            tvProductQty = itemView.findViewById(R.id.tvStatus);
+            tvProductPrice = itemView.findViewById(R.id.tvDate);
             imgProduct = itemView.findViewById(R.id.imgProduct);
             cardView = itemView.findViewById(R.id.cardViewProdAdmin);
             ratingBar = itemView.findViewById(R.id.ratingBar);
