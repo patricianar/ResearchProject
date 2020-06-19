@@ -116,10 +116,10 @@ public class CartActivity extends AppCompatActivity implements ProductCartAdapte
                                     editorCart.clear();
                                     editorCart.apply();
                                     SharedPreferences.Editor editorUser = sharedPrefUser.edit();
-                                    editorUser.clear();
+                                    editorUser.remove("Items");
                                     editorUser.apply();
                                     Thread.sleep(2500);
-                                    finish();
+                                    startActivity(new Intent(CartActivity.this, ProductCustomerActivity.class));
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
