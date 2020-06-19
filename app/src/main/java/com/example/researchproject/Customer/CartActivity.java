@@ -118,8 +118,8 @@ public class CartActivity extends AppCompatActivity implements ProductCartAdapte
                                     SharedPreferences.Editor editorUser = sharedPrefUser.edit();
                                     editorUser.clear();
                                     editorUser.apply();
-                                    Thread.sleep(2500); // wait before going to order
-                                    startActivity(new Intent(CartActivity.this, OrdersCustomerActivity.class));
+                                    Thread.sleep(2500);
+                                    finish();
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -145,6 +145,7 @@ public class CartActivity extends AppCompatActivity implements ProductCartAdapte
         Map<String, ?> keys = sharedPrefCart.getAll();
 
         if (sharedPrefCart.getAll().isEmpty()) {
+
 
         } else {
             for (Map.Entry<String, ?> entry : keys.entrySet()) {

@@ -92,10 +92,10 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
             final SharedPreferences.Editor editorCart = sharedPrefCart.edit();
             final SharedPreferences.Editor editorUser = sharedPrefUser.edit();
 
-            final int totalItems = sharedPrefUser.getInt("Items", 0);
             btnMinus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    final int totalItems = sharedPrefUser.getInt("Items", 0);
                     qty = Integer.parseInt(tvProductQty.getText().toString());
                     qty--;
                     if (qty > 0) {
@@ -139,6 +139,7 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
             btnPlus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    int totalItems = sharedPrefUser.getInt("Items", 0);
                     qty = Integer.parseInt(tvProductQty.getText().toString());
                     qty++;
                     tvProductQty.setText(String.valueOf(qty));

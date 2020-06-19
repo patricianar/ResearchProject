@@ -60,6 +60,16 @@ class BaseCustomerActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ImageBadgeView badgeView = findViewById(R.id.ibv_icon);
+        if(badgeView != null){
+            SharedPreferences sharedPrefUser = getSharedPreferences("User", MODE_PRIVATE);
+            badgeView.setBadgeValue(sharedPrefUser.getInt("Items", 0));
+        }
+    }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.cart:
