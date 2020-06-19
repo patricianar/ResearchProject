@@ -62,12 +62,17 @@ public class ProductCustomerActivity extends BaseCustomerActivity implements Pro
         int newBadgeValue = badgeView.getBadgeValue() + 1;
         badgeView.setBadgeValue(newBadgeValue);
 
-        SharedPreferences sharedPref = getSharedPreferences("Cart", MODE_PRIVATE);
-        int qty = sharedPref.getInt(String.valueOf(id), 0);
+        SharedPreferences sharedPrefCart = getSharedPreferences("Cart", MODE_PRIVATE);
+        SharedPreferences sharedPrefUser = getSharedPreferences("User", MODE_PRIVATE);
+        int qty = sharedPrefCart.getInt(String.valueOf(id), 0);
         //add qty of products
         qty++;
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt(String.valueOf(id), qty);
-        editor.apply();
+        SharedPreferences.Editor editorCart = sharedPrefCart.edit();
+        editorCart.putInt(String.valueOf(id), qty);
+        editorCart.apply();
+        SharedPreferences.Editor editorUser = sharedPrefUser.edit();
+        int totalItems = sharedPrefUser.getInt("Items", 0);
+        editorUser.putInt("Items", totalItems + 1);
+        editorUser.apply();
     }
 }

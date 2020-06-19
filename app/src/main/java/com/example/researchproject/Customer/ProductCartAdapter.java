@@ -28,7 +28,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.MyCustomViewHolder> {
     private List<Product> productList;
     private CallbackCart listener;
-    private SharedPreferences sharedPref;
+    private SharedPreferences sharedPrefCart, sharedPrefUser;
 
     public void setListener(CallbackCart listener) {
         this.listener = listener;
@@ -43,7 +43,8 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
     public MyCustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.product_item_cart, parent, false);
-        sharedPref = parent.getContext().getSharedPreferences("Cart", MODE_PRIVATE);
+        sharedPrefCart = parent.getContext().getSharedPreferences("Cart", MODE_PRIVATE);
+        sharedPrefUser = parent.getContext().getSharedPreferences("User", MODE_PRIVATE);
         MyCustomViewHolder myCustomViewHolder = new MyCustomViewHolder(view);
         return myCustomViewHolder;
     }
@@ -53,7 +54,7 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
         holder.tvProductName.setText(productList.get(position).getName());
         holder.tvProductPrice.setText(String.format("$%s", productList.get(position).getPrice()));
         Picasso.get().load(productList.get(position).getUrl_image()).into(holder.imgProduct);
-        int qty = sharedPref.getInt(String.valueOf(productList.get(position).getId()), 0);
+        int qty = sharedPrefCart.getInt(String.valueOf(productList.get(position).getId()), 0);
         holder.tvProductQty.setText(String.valueOf(qty));
         double total = qty * productList.get(position).getPrice();
         holder.tvTotalPrice.setText(String.format("$%.2f", total));
@@ -88,8 +89,10 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
             btnPlus = itemView.findViewById(R.id.btnPlus);
             constrainLayout = itemView.findViewById(R.id.constrainLayout);
 
-            final SharedPreferences.Editor editor = sharedPref.edit();
+            final SharedPreferences.Editor editorCart = sharedPrefCart.edit();
+            final SharedPreferences.Editor editorUser = sharedPrefUser.edit();
 
+            final int totalItems = sharedPrefUser.getInt("Items", 0);
             btnMinus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -99,12 +102,14 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
                         tvProductQty.setText(String.valueOf(qty));
                         total = qty * productList.get(getAdapterPosition()).getPrice();
                         tvTotalPrice.setText(String.format("$%.2f", total));
-                        editor.putInt(String.valueOf(productList.get(getAdapterPosition()).getId()), qty);
-                        editor.apply();
+                        editorCart.putInt(String.valueOf(productList.get(getAdapterPosition()).getId()), qty);
+                        editorCart.apply();
+                        editorUser.putInt("Items", totalItems - 1);
+                        editorUser.apply();
+                        Log.e("user", totalItems + "");
 
                         //update grand total
-                        if(listener!=null)
-                        {
+                        if (listener != null) {
                             listener.onRemoveClick(productList.get(getAdapterPosition()).getPrice());
                         }
                     } else {
@@ -114,11 +119,13 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
                                     @Override
                                     public void onClick(View v) {
                                         //delete from shared preferences
-                                        editor.remove(String.valueOf(productList.get(getAdapterPosition()).getId()));
-                                        editor.apply();
+                                        editorCart.remove(String.valueOf(productList.get(getAdapterPosition()).getId()));
+                                        editorCart.apply();
+                                        editorUser.putInt("Items", totalItems - 1);
+                                        editorUser.apply();
+                                        Log.e("user", totalItems + "");
                                         //update grand total
-                                        if(listener!=null)
-                                        {
+                                        if (listener != null) {
                                             listener.onRemoveClick(productList.get(getAdapterPosition()).getPrice());
                                         }
                                         removeItem(getAdapterPosition());
@@ -137,11 +144,12 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
                     tvProductQty.setText(String.valueOf(qty));
                     total = qty * productList.get(getAdapterPosition()).getPrice();
                     tvTotalPrice.setText(String.format("$%.2f", total));
-                    editor.putInt(String.valueOf(productList.get(getAdapterPosition()).getId()), qty);
-                    editor.apply();
+                    editorCart.putInt(String.valueOf(productList.get(getAdapterPosition()).getId()), qty);
+                    editorCart.apply();
+                    editorUser.putInt("Items", totalItems + 1);
+                    editorUser.apply();
                     //update grand total
-                    if(listener!=null)
-                    {
+                    if (listener != null) {
                         listener.onAddClick(productList.get(getAdapterPosition()).getPrice());
                     }
                 }
@@ -153,6 +161,7 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
 
     public interface CallbackCart {
         void onAddClick(double total);
+
         void onRemoveClick(double total);
     }
 }

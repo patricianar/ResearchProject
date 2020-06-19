@@ -33,4 +33,6 @@
     <string name="subtotal">Subtotal</string>
     <string name="btnPlaceOrder">Place Order</string>
     <string name="backButton">Back Button Image</string>
+    <string name="tvUpdateTitle">Update Product</string>
+    <string name="tvAddTitle">Add Product</string>
 </resources>

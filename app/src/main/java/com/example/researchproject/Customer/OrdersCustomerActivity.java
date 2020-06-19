@@ -40,7 +40,6 @@ public class OrdersCustomerActivity extends BaseCustomerActivity {
             @Override
             public void getResponse(String response) {
                 try {
-                    Log.d("Response", response);
                     Gson gson = new Gson();
                     Order[] order = gson.fromJson(response, Order[].class);
                     OrderAdapter myAdapter = new OrderAdapter(order);

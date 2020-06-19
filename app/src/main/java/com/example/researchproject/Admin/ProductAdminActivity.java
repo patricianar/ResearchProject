@@ -1,6 +1,7 @@
 package com.example.researchproject.Admin;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -59,7 +60,7 @@ public class ProductAdminActivity extends BaseAdminActivity implements UpdatePro
         initToolbar(R.id.toolbar);
         initBottomNavigationView(R.id.bottom_navigation, R.id.home);
 
-
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
         constraintLayout = findViewById(R.id.layoutProdAdmin);
 
         // Initialize BottomNavigationView
@@ -269,45 +270,6 @@ public class ProductAdminActivity extends BaseAdminActivity implements UpdatePro
 
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
         itemTouchhelper.attachToRecyclerView(recyclerView);
-    }
-
-    /**
-     * Init BottomNavigationView with 4 items:
-     * home, orders, notifications, account
-     */
-    private void initBottomNavigationView() {
-        //Initialize and Assign variable
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        //Set Result Selector
-        bottomNavigationView.setSelectedItemId(R.id.home);
-
-        //Perform ItemSelectedListener
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                switch (item.getItemId()) {
-                    case R.id.home:
-                        startActivity(new Intent(getApplicationContext(), ProductAdminActivity.class));
-                        finish(); // avoid going back to the same selected tab many times - save memory
-                        return true;
-                    case R.id.orders:
-                        //startActivity(new Intent(getApplicationContext(), RegisterEvents.class));
-                        //finish();
-                        return true;
-                    case R.id.notification:
-                        //startActivity(new Intent(getApplicationContext(), EventsActivity.class));
-                        //finish();
-                        return true;
-                    case R.id.account:
-                        //startActivity(new Intent(getApplicationContext(), MyEventsActivity.class));
-                        //finish();
-                        return true;
-                }
-                return false;
-            }
-        });
     }
 
     @Override

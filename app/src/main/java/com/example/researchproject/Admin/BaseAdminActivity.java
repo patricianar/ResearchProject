@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.example.researchproject.Customer.OrdersCustomerActivity;
+import com.example.researchproject.Customer.LoginActivity;
 import com.example.researchproject.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -46,9 +46,8 @@ class BaseAdminActivity extends AppCompatActivity
                 //textViewContent.setText("Search was selected");
                 //Toast.makeText(this, "Search", Toast.LENGTH_LONG).show();
                 return true;
-            case R.id.orders:
-//                textViewContent.setText("Delete was selected");
-//                Toast.makeText(this, "Delete", Toast.LENGTH_LONG).show();
+            case R.id.logout:
+                startActivity(new Intent(this, LoginActivity.class));
                 return true;
             case R.id.addProducts:
                 selectCSVFile(FILE_REQUEST_CODE_ADD);
@@ -67,8 +66,6 @@ class BaseAdminActivity extends AppCompatActivity
         intent.setType("*/*");
         startActivityForResult(intent, requestCode);
     }
-
-
 
     /**
      * Init BottomNavigationView with 4 items:

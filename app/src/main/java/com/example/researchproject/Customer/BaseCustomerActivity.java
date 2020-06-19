@@ -47,7 +47,8 @@ class BaseCustomerActivity extends AppCompatActivity {
         final MenuItem menuItem = menu.findItem(R.id.cart);
         //menuItem.setActionView(R.layout.actionbar_badge_layout);
         ImageBadgeView badgeView = menuItem.getActionView().findViewById(R.id.ibv_icon);
-        badgeView.setBadgeValue(0);
+        SharedPreferences sharedPrefUser = getSharedPreferences("User", MODE_PRIVATE);
+        badgeView.setBadgeValue(sharedPrefUser.getInt("Items", 0));
 
         //we need this so we can get it onOptionsItemSelected
         menuItem.getActionView().setOnClickListener(new View.OnClickListener() {
@@ -92,6 +93,11 @@ class BaseCustomerActivity extends AppCompatActivity {
             productsCart.add(product);
         }
         cart.setProductsCart(productsCart);
+
+        SharedPreferences.Editor editorUser = sharedPrefUser.edit();
+        editorUser.clear();
+        editorUser.apply();
+
         Gson gson = new Gson();
 
         final String jsonInString = gson.toJson(cart);
@@ -101,9 +107,9 @@ class BaseCustomerActivity extends AppCompatActivity {
             public void getResponse(String response) {
                 try {
                     if (response.contains("success")) {
-                        SharedPreferences.Editor editor = sharedPrefCart.edit();
-                        editor.clear();
-                        editor.apply();
+                        SharedPreferences.Editor editorCart = sharedPrefCart.edit();
+                        editorCart.clear();
+                        editorCart.apply();
                     }
                     Log.d("PostCart", response);
                 } catch (Exception ex) {
@@ -150,5 +156,4 @@ class BaseCustomerActivity extends AppCompatActivity {
             }
         });
     }
-
 }

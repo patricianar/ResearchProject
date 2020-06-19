@@ -13,14 +13,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.researchproject.Admin.ProductAdminActivity;
+import com.example.researchproject.Classes.Cart;
+import com.example.researchproject.Classes.Order;
+import com.example.researchproject.Classes.ProductOrdered;
 import com.example.researchproject.R;
 import com.example.researchproject.VolleyService;
+import com.google.gson.Gson;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "LoginActivity";
     EditText etEmail, etPassword;
     Button btnLogin;
     TextView tvLinkRegister;
+    int totalItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,23 +60,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 @Override
                 public void getResponse(String response) {
                     try {
-                        if(response.equals("false")){
+                        if (response.equals("false")) {
                             Toast.makeText(LoginActivity.this, "Your account or password is incorrect.", Toast.LENGTH_SHORT).show();
-                        }
-                        else{
+                        } else {
                             Toast.makeText(LoginActivity.this, "Hello " + response, Toast.LENGTH_SHORT).show();
-                            if(email.equals("admin@gmail.com")){
+                            if (email.equals("admin@gmail.com")) {
                                 startActivity(new Intent(LoginActivity.this, ProductAdminActivity.class));
-                            }else{
-                                SharedPreferences sharedPrefUser = getSharedPreferences("User", MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedPrefUser.edit();
-                                editor.putString("Email", email);
-                                editor.apply();
-                                SharedPreferences sharedPrefCart = getSharedPreferences("Cart", MODE_PRIVATE);
-                                if(sharedPrefCart.getAll().isEmpty())
-                                {
-
-                                }
+                            } else {
+                                getCart();
+                                Thread.sleep(500);
                                 startActivity(new Intent(LoginActivity.this, ProductCustomerActivity.class));
                             }
                         }
@@ -80,9 +77,45 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                 }
             }, "customerInfo", email + "," + password);
-        }
-        else {
+        } else {
             startActivity(new Intent(LoginActivity.this, RegistrationActivity.class));
         }
+    }
+
+    //getting cart from firebase and writing it to shared preferences
+    private void getCart() {
+        final SharedPreferences sharedPrefCart = getSharedPreferences("Cart", MODE_PRIVATE);
+        SharedPreferences sharedPrefUser = getSharedPreferences("User", MODE_PRIVATE);
+        final SharedPreferences.Editor editorUser = sharedPrefUser.edit();
+        editorUser.putString("Email", etEmail.getText().toString());
+
+        if (sharedPrefCart.getAll().isEmpty()) {
+            String url = "https://myprojectstore.000webhostapp.com/customer/cart/";
+
+            VolleyService request = new VolleyService(this);
+            request.executePostRequest(url, new VolleyService.VolleyCallback() {
+                @Override
+                public void getResponse(String response) {
+                    try {
+                        Gson gson = new Gson();
+                        ProductOrdered[] productsCart = gson.fromJson(response, ProductOrdered[].class);
+                        SharedPreferences.Editor editorCart = sharedPrefCart.edit();
+                        for (int i = 0; i < productsCart.length; i++ ){
+                            editorCart.putInt(String.valueOf(productsCart[i].getId()),
+                                    productsCart[i].getQuantity());
+                            editorCart.apply();
+                            totalItems += productsCart[i].getQuantity();
+                        }
+                        editorUser.putInt("Items", totalItems);
+                        editorUser.apply();
+                        Log.e("tesssssssssss", totalItems + "");
+                        Log.d(TAG, response);
+                    } catch (Exception ex) {
+                        Log.e(TAG, ex.getMessage() + response);
+                    }
+                }
+            }, "getCartByEmail", etEmail.getText().toString());
+        }
+        editorUser.apply();
     }
 }

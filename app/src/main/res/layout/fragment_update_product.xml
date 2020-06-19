@@ -7,15 +7,15 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     android:clickable="true"
-    tools:context=".Admin.AddProductFragment">
+    tools:context=".Admin.UpdateProductFragment">
 
     <TextView
-        android:id="@+id/tvAddTitle"
+        android:id="@+id/tvUpdateTitle"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:background="@color/colorAccent"
         android:gravity="center"
-        android:text="@string/tvAddTitle"
+        android:text="@string/tvUpdateTitle"
         android:textColor="@color/colorPrimary"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -23,32 +23,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imgBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvUpdateTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvUpdateTitle"
+        app:srcCompat="@drawable/ic_back" />
+
+    <TextView
         android:id="@+id/tvProdNameEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:hint="Enter name"
+        android:textColor="@color/colorPrimaryText"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvAddTitle" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/imgBack"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tvAddTitle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_back" />
+        app:layout_constraintTop_toBottomOf="@+id/tvUpdateTitle" />
 
     <ImageView
         android:id="@+id/imgProdEdit"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -57,10 +57,12 @@
         app:srcCompat="@drawable/ic_launcher_foreground" />
 
     <ScrollView
+        android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgProdEdit">
 
@@ -86,8 +88,9 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:background="@android:color/transparent"
-                android:hint="@string/description"
-                android:textColor="@color/colorSecondaryText" />
+                android:gravity="center|start"
+                android:textColor="@color/colorSecondaryText"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/line2"
@@ -101,9 +104,9 @@
             <LinearLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="160dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:orientation="horizontal">
 
@@ -112,28 +115,6 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvProdBrand"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:text="@string/brand"
-                        android:textColor="@color/colorSecondaryText"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvCategory"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:text="@string/category"
-                        android:textColor="@color/colorSecondaryText"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tvCostPrice"
@@ -178,7 +159,6 @@
                         android:textColor="@color/colorSecondaryText"
                         android:textSize="16sp"
                         android:textStyle="bold" />
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -188,32 +168,6 @@
                     android:orientation="vertical">
 
                     <EditText
-                        android:id="@+id/etProdBand"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="5dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/border"
-                        android:ems="10"
-                        android:gravity="center_vertical"
-                        android:inputType="textPersonName"
-                        android:textColor="@color/colorSecondaryText"
-                        android:textSize="16sp" />
-
-                    <EditText
-                        android:id="@+id/etCategory"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="5dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/border"
-                        android:ems="10"
-                        android:gravity="center_vertical"
-                        android:inputType="textPersonName"
-                        android:textColor="@color/colorSecondaryText"
-                        android:textSize="16sp" />
-
-                    <EditText
                         android:id="@+id/etCostPrice"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -221,7 +175,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/border"
                         android:ems="10"
-                        android:gravity="center_vertical"
+                        android:gravity="center"
                         android:inputType="numberDecimal"
                         android:textColor="@color/colorSecondaryText"
                         android:textSize="16sp" />
@@ -234,7 +188,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/border"
                         android:ems="10"
-                        android:gravity="center_vertical"
+                        android:gravity="center"
                         android:inputType="numberDecimal"
                         android:textColor="@color/colorSecondaryText"
                         android:textSize="16sp" />
@@ -247,7 +201,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/border"
                         android:ems="10"
-                        android:gravity="center_vertical"
+                        android:gravity="center"
                         android:inputType="number"
                         android:textColor="@color/colorSecondaryText"
                         android:textSize="16sp" />
@@ -260,7 +214,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/border"
                         android:ems="10"
-                        android:gravity="center_vertical"
+                        android:gravity="center"
                         android:inputType="number"
                         android:textColor="@color/colorSecondaryText"
                         android:textSize="16sp" />
@@ -272,11 +226,11 @@
                 android:id="@+id/btnEditProduct"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
                 android:background="@color/colorAccent"
-                android:text="Add"
+                android:text="@string/update"
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp" />
         </LinearLayout>

@@ -196,6 +196,12 @@ public class AddProductFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mListener.onClose();
+    }
+
     public interface OnCardViewClickedListener{
         void onOpen(); // hide bottom bar when cardView is clicked
         void onClose(); // show bottom bar when cardView is clicked

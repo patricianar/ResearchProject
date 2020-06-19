@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,11 +31,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import ru.nikartm.support.ImageBadgeView;
+
 public class CartActivity extends AppCompatActivity implements ProductCartAdapter.CallbackCart {
     private static final String TAG = "CartActivity";
     RecyclerView recyclerView;
     TextView tvSubtotal;
-    SharedPreferences sharedPref;
+    SharedPreferences sharedPrefCart;
     VolleyService request;
     List<Product> productsList;
     DecimalFormat decimalFormat;
@@ -49,24 +52,24 @@ public class CartActivity extends AppCompatActivity implements ProductCartAdapte
         tvSubtotal = findViewById(R.id.tvSubtotal);
         ImageView imgBack = findViewById(R.id.imgBack);
         Button btnPlaceOrder = findViewById(R.id.btnPlaceOrder);
-        sharedPref = getSharedPreferences("Cart", MODE_PRIVATE);
+        sharedPrefCart = getSharedPreferences("Cart", MODE_PRIVATE);
         request = new VolleyService(this);
         decimalFormat = new DecimalFormat("$#.##");
         getProducts();
 
-         imgBack.setOnClickListener(new View.OnClickListener() {
+        imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
 
-         btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 postOrder();
-             }
-         });
+        btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postOrder();
+            }
+        });
     }
 
     private void postOrder() {
@@ -74,14 +77,14 @@ public class CartActivity extends AppCompatActivity implements ProductCartAdapte
 
         Order order = new Order();
         Customer customer = new Customer();
-        SharedPreferences sharedPrefUser = getSharedPreferences("User", MODE_PRIVATE);
+        final SharedPreferences sharedPrefUser = getSharedPreferences("User", MODE_PRIVATE);
         customer.setEmail(sharedPrefUser.getString("Email", ""));
         order.setCustomer(customer);
 
         List<ProductOrdered> prodOrderedList = new ArrayList<>();
 
-        for(Product product: productsList){
-            int qty = sharedPref.getInt(String.valueOf(product.getId()), 0);
+        for (Product product : productsList) {
+            int qty = sharedPrefCart.getInt(String.valueOf(product.getId()), 0);
             ProductOrdered prodOrdered = new ProductOrdered();
             prodOrdered.setId(product.getId());
             prodOrdered.setName(product.getName());
@@ -102,22 +105,28 @@ public class CartActivity extends AppCompatActivity implements ProductCartAdapte
             @Override
             public void getResponse(String response) {
                 try {
-                    if(response.equals("true")){
+                    if (response.equals("true")) {
                         Toast.makeText(CartActivity.this, "Your order has been placed!", Toast.LENGTH_SHORT).show();
                         Thread thread = new Thread() {
                             @Override
                             public void run() {
                                 try {
-                                    Thread.sleep(3500); // wait before going to order
-                                    finish();
+                                    sharedPrefCart = getSharedPreferences("Cart", MODE_PRIVATE);
+                                    SharedPreferences.Editor editorCart = sharedPrefCart.edit();
+                                    editorCart.clear();
+                                    editorCart.apply();
+                                    SharedPreferences.Editor editorUser = sharedPrefUser.edit();
+                                    editorUser.clear();
+                                    editorUser.apply();
+                                    Thread.sleep(2500); // wait before going to order
+                                    startActivity(new Intent(CartActivity.this, OrdersCustomerActivity.class));
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }
                         };
                         thread.start();
-                    }
-                    else {
+                    } else {
                         Toast.makeText(CartActivity.this, "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
                     }
                     Log.d(TAG, response);
@@ -133,41 +142,45 @@ public class CartActivity extends AppCompatActivity implements ProductCartAdapte
         String productsIds = "";
 
         //gets the contents of shared preferences
-        Map<String, ?> keys = sharedPref.getAll();
+        Map<String, ?> keys = sharedPrefCart.getAll();
 
-        for (Map.Entry<String, ?> entry : keys.entrySet()) {
-            productsIds += entry.getKey() + ",";
-        }
-        productsIds = productsIds.substring(0, productsIds.length() - 1);
-        Log.e("test", productsIds);
+        if (sharedPrefCart.getAll().isEmpty()) {
 
-        request.executePostRequest(url, new VolleyService.VolleyCallback() {
-            @Override
-            public void getResponse(String response) {
-                try {
-                    if (response.contains("products")) {
-                        Gson gson = new Gson();
-                        Catalogue catalogue = gson.fromJson(response, Catalogue.class);
-                        productsList = catalogue.getProducts();
-                        ProductCartAdapter myAdapter = new ProductCartAdapter(productsList);
-                        myAdapter.setListener(CartActivity.this);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(CartActivity.this));
-                        recyclerView.setAdapter(myAdapter);
-                        for(Product product: catalogue.getProducts()){
-                            int qty = sharedPref.getInt(String.valueOf(product.getId()), 0);
-                            subTotal += qty * product.getPrice();
-                        }
-                        tvSubtotal.setText(decimalFormat.format(subTotal));
-                        //myAdapter.setListener(ProductCustomerActivity.this);
-                    } else {
-                        Toast.makeText(CartActivity.this, "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
-                    }
-                    Log.d(TAG, response);
-                } catch (Exception ex) {
-                    Log.e(TAG, ex.getMessage());
-                }
+        } else {
+            for (Map.Entry<String, ?> entry : keys.entrySet()) {
+                productsIds += entry.getKey() + ",";
             }
-        }, "productsCart", productsIds);
+            productsIds = productsIds.substring(0, productsIds.length() - 1);
+            Log.e("test", productsIds);
+
+            request.executePostRequest(url, new VolleyService.VolleyCallback() {
+                @Override
+                public void getResponse(String response) {
+                    try {
+                        if (response.contains("products")) {
+                            Gson gson = new Gson();
+                            Catalogue catalogue = gson.fromJson(response, Catalogue.class);
+                            productsList = catalogue.getProducts();
+                            ProductCartAdapter myAdapter = new ProductCartAdapter(productsList);
+                            myAdapter.setListener(CartActivity.this);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(CartActivity.this));
+                            recyclerView.setAdapter(myAdapter);
+                            for (Product product : catalogue.getProducts()) {
+                                int qty = sharedPrefCart.getInt(String.valueOf(product.getId()), 0);
+                                subTotal += qty * product.getPrice();
+                            }
+                            tvSubtotal.setText(decimalFormat.format(subTotal));
+                            //myAdapter.setListener(ProductCustomerActivity.this);
+                        } else {
+                            Toast.makeText(CartActivity.this, "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
+                        }
+                        Log.d(TAG, response);
+                    } catch (Exception ex) {
+                        Log.e(TAG, ex.getMessage());
+                    }
+                }
+            }, "productsCart", productsIds);
+        }
     }
 
     @Override
