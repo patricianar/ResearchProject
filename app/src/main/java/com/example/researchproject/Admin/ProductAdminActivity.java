@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.researchproject.Classes.Catalogue;
 import com.example.researchproject.Classes.Product;
+import com.example.researchproject.MessageFragment;
 import com.example.researchproject.R;
 import com.example.researchproject.SwipeToDeleteCallback;
 import com.example.researchproject.VolleyService;
@@ -35,7 +36,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class ProductAdminActivity extends BaseAdminActivity implements UpdateProductFragment.OnCardViewClickedListener,
-        AddProductFragment.OnCardViewClickedListener{
+        AddProductFragment.OnCardViewClickedListener {
     private ArrayList<Product> productsList = new ArrayList<>();
     private static final String TAG = "ProductAdminActivity";
     ConstraintLayout constraintLayout;
@@ -43,6 +44,7 @@ public class ProductAdminActivity extends BaseAdminActivity implements UpdatePro
     BottomNavigationView bottomNavigationView;
     FloatingActionButton fab;
     VolleyService request;
+    MessageFragment msgFragment;
 
     String url;
 
@@ -62,6 +64,7 @@ public class ProductAdminActivity extends BaseAdminActivity implements UpdatePro
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         constraintLayout = findViewById(R.id.layoutProdAdmin);
+        msgFragment = MessageFragment.newInstance(R.drawable.logo, "store");
 
         // Initialize BottomNavigationView
         //initBottomNavigationView();
@@ -77,6 +80,7 @@ public class ProductAdminActivity extends BaseAdminActivity implements UpdatePro
             @Override
             public void onClick(View view) {
                 getSupportFragmentManager().beginTransaction().add(R.id.prodDetailFrag, AddProductFragment.newInstance()).addToBackStack(null).commit();
+                removeMsg();
             }
         });
     }
@@ -86,19 +90,28 @@ public class ProductAdminActivity extends BaseAdminActivity implements UpdatePro
             @Override
             public void getResponse(String response) {
                 try {
-                    Gson gson = new Gson();
-                    Catalogue catalogue = gson.fromJson(response, Catalogue.class);
-                    ProductAdminAdapter myAdapter = new ProductAdminAdapter(catalogue.getProducts());
-                    recyclerView = findViewById(R.id.recyclerViewProductsAdmin);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(ProductAdminActivity.this));
-                    recyclerView.setAdapter(myAdapter);
-                    enableSwipeToDeleteAndUndo(myAdapter);
+                    if (response.isEmpty()) {
+                        getSupportFragmentManager().beginTransaction()
+                                .add(R.id.frameProdAdmin, msgFragment).commit();
+                    } else {
+                        Gson gson = new Gson();
+                        Catalogue catalogue = gson.fromJson(response, Catalogue.class);
+                        ProductAdminAdapter myAdapter = new ProductAdminAdapter(catalogue.getProducts());
+                        recyclerView = findViewById(R.id.recyclerViewProductsAdmin);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(ProductAdminActivity.this));
+                        recyclerView.setAdapter(myAdapter);
+                        enableSwipeToDeleteAndUndo(myAdapter);
+                    }
                     Log.d(TAG, response);
                 } catch (Exception ex) {
                     Log.e(TAG, ex.getMessage());
                 }
             }
         });
+    }
+
+    private void removeMsg(){
+        getSupportFragmentManager().beginTransaction().remove(msgFragment).commit();
     }
 
     @Override
@@ -115,7 +128,7 @@ public class ProductAdminActivity extends BaseAdminActivity implements UpdatePro
                 Catalogue catalogue = new Catalogue();
                 Gson gson = new Gson();
 
-                if(requestCode == FILE_REQUEST_CODE_ADD) {
+                if (requestCode == FILE_REQUEST_CODE_ADD) {
                     readCSVAddProducts(uri);
                     catalogue.setProducts(productsList);
                     String jsonCatalogue = gson.toJson(catalogue);
@@ -125,6 +138,7 @@ public class ProductAdminActivity extends BaseAdminActivity implements UpdatePro
                             try {
                                 if (response.equals("true")) {
                                     Toast.makeText(ProductAdminActivity.this, "Your catalogue has been updated", Toast.LENGTH_SHORT).show();
+                                    removeMsg();
                                     getProducts();
                                 }
                                 productsList.clear();
@@ -134,8 +148,7 @@ public class ProductAdminActivity extends BaseAdminActivity implements UpdatePro
                             }
                         }
                     }, "products", jsonCatalogue);
-                }
-                else if(requestCode == FILE_REQUEST_CODE_UPDATE){
+                } else if (requestCode == FILE_REQUEST_CODE_UPDATE) {
                     readCSVUpdateProducts(uri);
                     catalogue.setProducts(productsList);
                     String jsonCatalogue = gson.toJson(catalogue);
