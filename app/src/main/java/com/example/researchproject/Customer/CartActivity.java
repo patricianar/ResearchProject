@@ -20,6 +20,7 @@ import com.example.researchproject.Classes.Customer;
 import com.example.researchproject.Classes.Order;
 import com.example.researchproject.Classes.Product;
 import com.example.researchproject.Classes.ProductOrdered;
+import com.example.researchproject.MessageFragment;
 import com.example.researchproject.R;
 import com.example.researchproject.VolleyService;
 import com.google.gson.Gson;
@@ -145,7 +146,8 @@ public class CartActivity extends AppCompatActivity implements ProductCartAdapte
         Map<String, ?> keys = sharedPrefCart.getAll();
 
         if (sharedPrefCart.getAll().isEmpty()) {
-
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.frameCart, MessageFragment.newInstance(R.drawable.logo, "cart")).commit();
 
         } else {
             for (Map.Entry<String, ?> entry : keys.entrySet()) {
@@ -194,5 +196,9 @@ public class CartActivity extends AppCompatActivity implements ProductCartAdapte
     public void onRemoveClick(double total) {
         subTotal -= total;
         tvSubtotal.setText(decimalFormat.format(subTotal));
+        if(subTotal == 0){
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.frameCart, MessageFragment.newInstance(R.drawable.logo, "cart")).commit();
+        }
     }
 }
