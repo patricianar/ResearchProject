@@ -53,21 +53,12 @@ public class ProductAdminActivity extends BaseAdminActivity implements UpdatePro
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_admin);
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        // Sets the Toolbar to act as the ActionBar for this Activity window.
-//        setSupportActionBar(toolbar);
-//        toolbar.setTitle("");
-//        toolbar.setLogo(R.mipmap.ic_launcher_round);
-
         initToolbar(R.id.toolbar);
         initBottomNavigationView(R.id.bottom_navigation, R.id.home);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         constraintLayout = findViewById(R.id.layoutProdAdmin);
         msgFragment = MessageFragment.newInstance(R.drawable.logo, "store");
-
-        // Initialize BottomNavigationView
-        //initBottomNavigationView();
 
         url = "https://myprojectstore.000webhostapp.com/product/";
         //url = "http://100.25.155.48/product/";
@@ -90,7 +81,8 @@ public class ProductAdminActivity extends BaseAdminActivity implements UpdatePro
             @Override
             public void getResponse(String response) {
                 try {
-                    if (response.isEmpty()) {
+                    Log.e("response", response);
+                    if (response.equals("empty")) {
                         getSupportFragmentManager().beginTransaction()
                                 .add(R.id.frameProdAdmin, msgFragment).commit();
                     } else {

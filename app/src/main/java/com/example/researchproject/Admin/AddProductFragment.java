@@ -119,10 +119,9 @@ public class AddProductFragment extends Fragment {
                                     @Override
                                     public void run() {
                                         try {
-                                            Thread.sleep(3500); // wait before going to login
+                                            Thread.sleep(2500); // wait before going to login
                                             getActivity().getSupportFragmentManager().beginTransaction().remove(AddProductFragment.this).commit();
-                                            mListener.onClose();
-                                        } catch (Exception e) {
+                                            mListener.onClose();                                        } catch (Exception e) {
                                             e.printStackTrace();
                                         }
                                     }
@@ -194,12 +193,6 @@ public class AddProductFragment extends Fragment {
                 }
             }
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mListener.onClose();
     }
 
     public interface OnCardViewClickedListener{
