@@ -65,37 +65,38 @@ public class TestCamActivity extends AppCompatActivity {
 
 
 
-        final CharSequence[] items = {"Take Photo", "Choose from Library", "Cancel"};
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(TestCamActivity.this);
-        builder.setTitle("Add Photo!");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
 
 
-                if (items[item].equals("Take Photo")) {
-                   // PROFILE_PIC_COUNT = 1;
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(intent, REQUEST_CAMERA);
-                } else if (items[item].equals("Choose from Library")) {
-                    //PROFILE_PIC_COUNT = 1;
-                    Intent intent = new Intent(
-                            Intent.ACTION_PICK,
-                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(intent,SELECT_FILE);
-                } else if (items[item].equals("Cancel")) {
-                    //PROFILE_PIC_COUNT = 0;
-                    dialog.dismiss();
+        if (allPermissionsGranted()) {
+            //startCamera(); //start camera if permission has been granted by user
+            final CharSequence[] items = {"Take Photo", "Choose from Library", "Cancel"};
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(TestCamActivity.this);
+            builder.setTitle("Add Photo!");
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int item) {
+
+
+                    if (items[item].equals("Take Photo")) {
+                        // PROFILE_PIC_COUNT = 1;
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(intent, REQUEST_CAMERA);
+                    } else if (items[item].equals("Choose from Library")) {
+                        //PROFILE_PIC_COUNT = 1;
+                        Intent intent = new Intent(
+                                Intent.ACTION_PICK,
+                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(intent,SELECT_FILE);
+                    } else if (items[item].equals("Cancel")) {
+                        //PROFILE_PIC_COUNT = 0;
+                        dialog.dismiss();
+                    }
                 }
-            }
-        });
-        builder.show();
-
-//        if (allPermissionsGranted()) {
-//            startCamera(); //start camera if permission has been granted by user
-//        } else {
-//            ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
-//        }
+            });
+            builder.show();
+        } else {
+            ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
+        }
 
         // Setup the listener for take photo button
         //camera_capture_button.setOnClickListener { takePhoto() }
