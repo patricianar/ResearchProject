@@ -102,7 +102,7 @@ public class AddProductFragment extends Fragment {
                 String url = "https://myprojectstore.000webhostapp.com/product/";
                 //String url = "http://100.25.155.48/product/";
 
-                Product newProduct = new Product("adfdf",etProdBand.getText().toString(),etCategory.getText().toString(),Double.parseDouble(etCostPrice.getText().toString()),
+                Product newProduct = new Product("1234",etProdBand.getText().toString(),etCategory.getText().toString(),Double.parseDouble(etCostPrice.getText().toString()),
                         etProdDesc.getText().toString(),300,Integer.parseInt(etInvLevel.getText().toString()),Integer.parseInt(etInvWarnLevel.getText().toString()),
                         tvProdName.getText().toString(),Double.parseDouble(etPrice.getText().toString()),encodedImage);
 

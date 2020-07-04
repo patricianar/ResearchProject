@@ -6,6 +6,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name='android.permission.CAMERA' />
+
 
     <application
         android:allowBackup="true"
@@ -15,12 +18,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Customer.OrdersCustomerActivity"></activity>
+        <activity android:name=".Customer.LoginActivity"></activity>
+        <activity android:name=".Customer.OrdersCustomerActivity" />
         <activity android:name=".Customer.CartActivity" />
         <activity android:name=".Customer.ProductCustomerActivity" />
         <activity android:name=".Customer.RegistrationActivity" />
         <activity android:name=".Admin.ProductAdminActivity" />
-        <activity android:name=".Customer.LoginActivity">
+        <activity android:name=".TestCamActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
