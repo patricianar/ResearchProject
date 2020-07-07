@@ -98,13 +98,13 @@
             </androidx.cardview.widget.CardView>
 
             <Button
-                android:id="@+id/btnPlaceOrder"
+                android:id="@+id/btnContinue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:background="@color/colorAccent"
-                android:text="@string/btnPlaceOrder"
+                android:text="@string/btnContinue"
                 android:textColor="@color/colorPrimary"
                 android:textSize="16sp" />
 

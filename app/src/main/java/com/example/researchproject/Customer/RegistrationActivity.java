@@ -73,7 +73,8 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                 final Customer customer = new Customer(email, firstName, lastName, password1);
                 Gson gson = new Gson();
                 final String jsonInString = gson.toJson(customer);
-                String url = "https://myprojectstore.000webhostapp.com/customer/";
+//                String url = "https://myprojectstore.000webhostapp.com/customer/";
+                String url = "http://100.25.155.48/customer/";
 
                 VolleyService request = new VolleyService(this);
                 request.executePostRequest(url, new VolleyService.VolleyCallback() {

@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.researchproject.Admin.AddProductFragment;
 import com.example.researchproject.Classes.Catalogue;
 import com.example.researchproject.Classes.Customer;
 import com.example.researchproject.Classes.Order;
@@ -27,12 +26,8 @@ import com.google.gson.Gson;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import ru.nikartm.support.ImageBadgeView;
 
 public class CartActivity extends AppCompatActivity implements ProductCartAdapter.CallbackCart {
     private static final String TAG = "CartActivity";
@@ -52,7 +47,7 @@ public class CartActivity extends AppCompatActivity implements ProductCartAdapte
         recyclerView = findViewById(R.id.recyclerViewCart);
         tvSubtotal = findViewById(R.id.tvSubtotal);
         ImageView imgBack = findViewById(R.id.imgBack);
-        Button btnPlaceOrder = findViewById(R.id.btnPlaceOrder);
+        Button btnPlaceOrder = findViewById(R.id.btnContinue);
         sharedPrefCart = getSharedPreferences("Cart", MODE_PRIVATE);
         request = new VolleyService(this);
         decimalFormat = new DecimalFormat("$#.##");
@@ -74,7 +69,8 @@ public class CartActivity extends AppCompatActivity implements ProductCartAdapte
     }
 
     private void postOrder() {
-        String url = "https://myprojectstore.000webhostapp.com/order/";
+//        String url = "https://myprojectstore.000webhostapp.com/order/";
+        String url = "http://100.25.155.48/order/";
 
         Order order = new Order();
         Customer customer = new Customer();

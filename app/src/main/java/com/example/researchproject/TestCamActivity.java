@@ -63,10 +63,6 @@ public class TestCamActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_cam);
 
-
-
-
-
         if (allPermissionsGranted()) {
             //startCamera(); //start camera if permission has been granted by user
             final CharSequence[] items = {"Take Photo", "Choose from Library", "Cancel"};

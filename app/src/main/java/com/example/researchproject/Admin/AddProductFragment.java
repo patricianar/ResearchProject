@@ -99,8 +99,8 @@ public class AddProductFragment extends Fragment {
         btnEditProd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = "https://myprojectstore.000webhostapp.com/product/";
-                //String url = "http://100.25.155.48/product/";
+//                String url = "https://myprojectstore.000webhostapp.com/product/";
+                String url = "http://100.25.155.48/product/";
 
                 Product newProduct = new Product("1234",etProdBand.getText().toString(),etCategory.getText().toString(),Double.parseDouble(etCostPrice.getText().toString()),
                         etProdDesc.getText().toString(),300,Integer.parseInt(etInvLevel.getText().toString()),Integer.parseInt(etInvWarnLevel.getText().toString()),
@@ -144,7 +144,7 @@ public class AddProductFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if(context instanceof UpdateProductFragment.OnCardViewClickedListener){
+        if(context instanceof AddProductFragment.OnCardViewClickedListener){
             mListener = (OnCardViewClickedListener) context;
         }else {
             throw new RuntimeException(context.toString()

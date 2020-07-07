@@ -53,7 +53,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             final String email = etEmail.getText().toString();
             String password = etPassword.getText().toString();
 
-            String url = "https://myprojectstore.000webhostapp.com/customer/";
+//            String url = "https://myprojectstore.000webhostapp.com/customer/";
+            String url = "http://100.25.155.48/customer/";
 
             VolleyService request = new VolleyService(this);
             request.executePostRequest(url, new VolleyService.VolleyCallback() {

@@ -1,8 +1,11 @@
 package com.example.researchproject.Customer;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,11 +15,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.researchproject.Admin.ProductAdminActivity;
 import com.example.researchproject.Classes.Cart;
 import com.example.researchproject.Classes.ProductOrdered;
 import com.example.researchproject.R;
+import com.example.researchproject.SearchFragment;
+import com.example.researchproject.TestCamActivity;
 import com.example.researchproject.VolleyService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
@@ -27,14 +34,20 @@ import java.util.Map;
 
 import ru.nikartm.support.ImageBadgeView;
 
-class BaseCustomerActivity extends AppCompatActivity {
+class BaseCustomerActivity extends AppCompatActivity implements SearchFragment.OnSearchListener {
+    private int REQUEST_CODE_PERMISSIONS = 101;
+    private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE"};
+    protected static final int REQUEST_CAMERA = 10;
+    protected static final int SELECT_FILE = 11;
+    private Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
     public void initToolbar(int toolbarId) {
-        Toolbar toolbar = (Toolbar) findViewById(toolbarId);
+        toolbar = (Toolbar) findViewById(toolbarId);
         // Sets the Toolbar to act as the ActionBar for this Activity window.
         setSupportActionBar(toolbar);
         toolbar.setTitle("");
@@ -78,6 +91,14 @@ class BaseCustomerActivity extends AppCompatActivity {
             case R.id.logout:
                 postCart();
                 startActivity(new Intent(this, LoginActivity.class));
+                return true;
+            case R.id.search:
+                SearchFragment searchFragment = new SearchFragment();
+                getSupportFragmentManager().beginTransaction().add(R.id.frameCustomer, searchFragment).addToBackStack(null).commit();
+                toolbar.setVisibility(View.INVISIBLE);
+                return true;
+            case R.id.takePic:
+                showOptions();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -129,6 +150,49 @@ class BaseCustomerActivity extends AppCompatActivity {
         }, "saveCart", jsonInString);
     }
 
+    public void showOptions(){
+        if (allPermissionsGranted()) {
+            final CharSequence[] items = {"Take Photo", "Choose from Gallery", "Cancel"};
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+            builder.setTitle("Upload Photo!");
+            builder.setItems(items, (dialog, item) -> {
+                if (items[item].equals("Take Photo")) {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(intent, REQUEST_CAMERA);
+                } else if (items[item].equals("Choose from Gallery")) {
+                    Intent intent = new Intent(
+                            Intent.ACTION_PICK,
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(intent,SELECT_FILE);
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            });
+            builder.show();
+        } else {
+            ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
+        }
+    }
+
+    private boolean allPermissionsGranted() {
+        for (String permission : REQUIRED_PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CODE_PERMISSIONS) {
+            if (!allPermissionsGranted()) {
+                Toast.makeText(this, "Permissions not granted by the user.", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+    }
+
     /**
      * Init BottomNavigationView with 4 items:
      * home, orders, notifications, account
@@ -165,5 +229,14 @@ class BaseCustomerActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onClose() {
+        toolbar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onEnter(String word){
     }
 }

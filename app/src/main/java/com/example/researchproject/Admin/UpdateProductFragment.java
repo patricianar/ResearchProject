@@ -124,8 +124,8 @@ public class UpdateProductFragment extends Fragment {
         btnEditProd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = "https://myprojectstore.000webhostapp.com/product/";
-                //String url = "http://100.25.155.48/product/";
+//                String url = "https://myprojectstore.000webhostapp.com/product/";
+                String url = "http://100.25.155.48/product/";
 
                 mParam1.setDescription(etProdDesc.getText().toString());
                 mParam1.setCost_price(Double.parseDouble(etCostPrice.getText().toString()));

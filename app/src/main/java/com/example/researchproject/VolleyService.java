@@ -32,12 +32,7 @@ public class VolleyService {
                     if (callback != null)
                         callback.getResponse(response);
                 }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e("Volley: ", error.getMessage() + "hi");
-                }
-            }) {
+            }, error -> Log.e("Volley: ", error.getMessage() + " Get")) {
 
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
@@ -59,21 +54,12 @@ public class VolleyService {
     public void executePostRequest(String url, final VolleyCallback callback, final String name, final String jsonInString){
         try {
         StringRequest putRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>()
-                {
-                    @Override
-                    public void onResponse(String response) {
-                        if (callback != null)
-                            callback.getResponse(response);
-                    }
+                response -> {
+                    if (callback != null)
+                        callback.getResponse(response);
                 },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // error
-                        Log.e("Error.Response", Objects.requireNonNull(error.getMessage()));
-                    }
+                error -> {
+                    Log.e("Error.Response", Objects.requireNonNull(error.getMessage()));
                 }
         ) {
             @Override

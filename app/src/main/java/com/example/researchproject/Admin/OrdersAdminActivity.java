@@ -25,7 +25,8 @@ public class OrdersAdminActivity extends BaseAdminActivity {
         initToolbar(R.id.toolbar);
         initBottomNavigationView(R.id.bottom_navigation, R.id.orders);
 
-        url = "https://myprojectstore.000webhostapp.com/order/";
+//        url = "https://myprojectstore.000webhostapp.com/order/";
+        url = "http://100.25.155.48/order/";
         request = new VolleyService(this);
         getOrders();
     }

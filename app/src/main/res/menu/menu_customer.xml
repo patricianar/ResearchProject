@@ -7,6 +7,12 @@
         android:title="@string/search"
         app:showAsAction="always" />
     <item
+        android:id="@+id/takePic"
+        android:icon="@drawable/ic_take_pic"
+        android:title="Take Picture"
+        app:showAsAction="always"
+        />
+    <item
         android:id="@+id/cart"
         android:title="Cart"
         app:actionLayout="@layout/actionbar_badge_layout"
