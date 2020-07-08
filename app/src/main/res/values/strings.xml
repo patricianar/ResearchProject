@@ -36,4 +36,5 @@
     <string name="tvUpdateTitle">Update Product</string>
     <string name="tvAddTitle">Add Product</string>
     <string name="btnContinue">Continue</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

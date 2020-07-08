@@ -63,7 +63,8 @@ public class CartActivity extends AppCompatActivity implements ProductCartAdapte
         btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                postOrder();
+                //postOrder();
+                startActivity(new Intent(CartActivity.this, MapsActivity.class));
             }
         });
     }

@@ -134,7 +134,6 @@ public class ProductCustomerActivity extends BaseCustomerActivity implements Pro
         if (word.isEmpty()) {
             Toast.makeText(ProductCustomerActivity.this, "Please enter a word to start searching!", Toast.LENGTH_LONG).show();
         } else {
-            String url = "http://100.25.155.48/";
             request.executePostRequest(url, response -> {
                 try {
                     Log.d(TAG, response);
