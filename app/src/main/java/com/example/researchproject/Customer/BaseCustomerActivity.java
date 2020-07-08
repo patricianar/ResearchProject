@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ class BaseCustomerActivity extends AppCompatActivity implements SearchFragment.O
     protected static final int REQUEST_CAMERA = 10;
     protected static final int SELECT_FILE = 11;
     private Toolbar toolbar;
+    protected SearchFragment searchFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,12 +95,9 @@ class BaseCustomerActivity extends AppCompatActivity implements SearchFragment.O
                 startActivity(new Intent(this, LoginActivity.class));
                 return true;
             case R.id.search:
-                SearchFragment searchFragment = new SearchFragment();
+                searchFragment = new SearchFragment();
                 getSupportFragmentManager().beginTransaction().add(R.id.frameCustomer, searchFragment).addToBackStack(null).commit();
                 toolbar.setVisibility(View.INVISIBLE);
-                return true;
-            case R.id.takePic:
-                showOptions();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -238,5 +237,10 @@ class BaseCustomerActivity extends AppCompatActivity implements SearchFragment.O
 
     @Override
     public void onEnter(String word){
+    }
+
+    @Override
+    public void onClick() {
+        showOptions();
     }
 }

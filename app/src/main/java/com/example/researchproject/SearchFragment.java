@@ -40,6 +40,7 @@ public class SearchFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         EditText etWordToSearch = view.findViewById(R.id.etWordToSearch);
         ImageView imgClose = view.findViewById(R.id.imgBack);
+        ImageView imgCamera = view.findViewById(R.id.imgCamera);
 
         etWordToSearch.requestFocus();
         etWordToSearch.setOnKeyListener(new View.OnKeyListener() {
@@ -53,6 +54,10 @@ public class SearchFragment extends Fragment {
                 }
                 return false;
             }
+        });
+
+        imgCamera.setOnClickListener(v -> {
+            mListener.onClick();
         });
 
         imgClose.setOnClickListener(view1 -> {
@@ -75,11 +80,13 @@ public class SearchFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        mListener.onClose();
         mListener = null;
     }
 
     public interface OnSearchListener{
         void onClose(); // show toolbar when cardView is clicked
         void onEnter(String word);
+        void onClick();
     }
 }

@@ -53,18 +53,13 @@ public class CartActivity extends AppCompatActivity implements ProductCartAdapte
         decimalFormat = new DecimalFormat("$#.##");
         getProducts();
 
-        imgBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        imgBack.setOnClickListener(view -> finish());
 
         btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //postOrder();
-                startActivity(new Intent(CartActivity.this, MapsActivity.class));
+                startActivity(new Intent(CartActivity.this, InfoCustomerActivity.class));
             }
         });
     }

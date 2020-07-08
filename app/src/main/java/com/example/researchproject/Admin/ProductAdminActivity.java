@@ -20,6 +20,7 @@ import com.example.researchproject.Classes.Catalogue;
 import com.example.researchproject.Classes.Product;
 import com.example.researchproject.MessageFragment;
 import com.example.researchproject.R;
+import com.example.researchproject.SearchFragment;
 import com.example.researchproject.SwipeToDeleteCallback;
 import com.example.researchproject.VolleyService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;

@@ -1,5 +1,6 @@
 package com.example.researchproject.Customer;
 
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,8 +17,10 @@ import android.widget.Toast;
 
 import com.example.researchproject.Admin.AddProductFragment;
 import com.example.researchproject.Classes.Catalogue;
+import com.example.researchproject.MessageFragment;
 import com.example.researchproject.PictureFragment;
 import com.example.researchproject.R;
+import com.example.researchproject.SearchFragment;
 import com.example.researchproject.TestCamActivity;
 import com.example.researchproject.VolleyService;
 import com.google.gson.Gson;
@@ -49,21 +52,18 @@ public class ProductCustomerActivity extends BaseCustomerActivity implements Pro
 
     //get products from firebase and display them in recycler view
     private void getProducts() {
-        request.executeGetRequest(url, new VolleyService.VolleyCallback() {
-            @Override
-            public void getResponse(String response) {
-                try {
-                    Gson gson = new Gson();
-                    Catalogue catalogue = gson.fromJson(response, Catalogue.class);
-                    ProductCustomerAdapter myAdapter = new ProductCustomerAdapter(catalogue.getProducts());
-                    RecyclerView recyclerView = findViewById(R.id.recyclerViewProducts);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(ProductCustomerActivity.this));
-                    recyclerView.setAdapter(myAdapter);
-                    myAdapter.setListener(ProductCustomerActivity.this);
-                    Log.d("Response", response);
-                } catch (Exception ex) {
-                    Log.e("Request: ", ex.getMessage());
-                }
+        request.executeGetRequest(url, response -> {
+            try {
+                Gson gson = new Gson();
+                Catalogue catalogue = gson.fromJson(response, Catalogue.class);
+                ProductCustomerAdapter myAdapter = new ProductCustomerAdapter(catalogue.getProducts());
+                RecyclerView recyclerView = findViewById(R.id.recyclerViewProducts);
+                recyclerView.setLayoutManager(new LinearLayoutManager(ProductCustomerActivity.this));
+                recyclerView.setAdapter(myAdapter);
+                myAdapter.setListener(ProductCustomerActivity.this);
+                Log.d("Response", response);
+            } catch (Exception ex) {
+                Log.e("Request: ", ex.getMessage());
             }
         });
     }
@@ -108,25 +108,34 @@ public class ProductCustomerActivity extends BaseCustomerActivity implements Pro
                     String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
 
                     VolleyService request = new VolleyService(ProductCustomerActivity.this);
-                    request.executePostRequest(url, new VolleyService.VolleyCallback() {
-                        @Override
-                        public void getResponse(String response) {
-                            try {
-                                if (response.equals("true")) {
-                                    //Toast.makeText(getContext(), "New Product has been added!", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    //Toast.makeText(getContext(), "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
-                                }
-                                Log.e(TAG, response);
-                                Toast.makeText(ProductCustomerActivity.this, response, Toast.LENGTH_LONG).show();
-                            } catch (Exception ex) {
-                                Log.e(TAG, ex.getMessage());
+                    request.executePostRequest(url, response -> {
+                        try {
+                            if (response.equals("no results")) {
+                                //Toast.makeText(getContext(), "New Product has been added!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Log.e("here", "here");
+                                Gson gson = new Gson();
+                                Catalogue catalogue = gson.fromJson(response, Catalogue.class);
+                                ProductCustomerAdapter myAdapter = new ProductCustomerAdapter(catalogue.getProducts());
+                                RecyclerView recyclerView = findViewById(R.id.recyclerViewProducts);
+                                recyclerView.setLayoutManager(new LinearLayoutManager(ProductCustomerActivity.this));
+                                recyclerView.setAdapter(myAdapter);
+                                myAdapter.setListener(ProductCustomerActivity.this);
                             }
+                            Log.d(TAG, response);
+                        } catch (Exception ex) {
+                            Log.e(TAG, ex.getMessage());
                         }
                     }, "searchByImage", encodedImage);
                 }
             }
         }
+    }
+
+    @Override
+    public void onClose(){
+        super.onClose();
+        getProducts();
     }
 
     @Override
@@ -138,7 +147,18 @@ public class ProductCustomerActivity extends BaseCustomerActivity implements Pro
                 try {
                     Log.d(TAG, response);
                     if (response.equals("no results")) {
-                            //display nothing found
+                        getSupportFragmentManager().beginTransaction().remove(searchFragment).commit();
+                        MessageFragment msgFragment = (MessageFragment) getSupportFragmentManager().findFragmentByTag("msgFrag");
+                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        if(msgFragment == null){
+                            msgFragment = MessageFragment.newInstance(R.drawable.logo, "results");
+                            transaction.add(R.id.frameCustomer, msgFragment, "msgFrag").addToBackStack("HideMsgFrag").commit();
+                            getSupportFragmentManager().beginTransaction().add(R.id.frameCustomer, searchFragment).addToBackStack(null).commit();
+                        }
+
+
+//                        getSupportFragmentManager().beginTransaction().add(R.id.frameCustomer, msgFragment).addToBackStack(null).commit();
+//                        getSupportFragmentManager().beginTransaction().add(R.id.frameCustomer, searchFragment).addToBackStack(null).commit();
                     } else {
                         Gson gson = new Gson();
                         Catalogue catalogue = gson.fromJson(response, Catalogue.class);
