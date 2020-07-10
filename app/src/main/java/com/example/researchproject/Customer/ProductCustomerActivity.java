@@ -133,7 +133,7 @@ public class ProductCustomerActivity extends BaseCustomerActivity implements Pro
     }
 
     @Override
-    public void onClose(){
+    public void onClose() {
         super.onClose();
         getProducts();
     }
@@ -145,21 +145,21 @@ public class ProductCustomerActivity extends BaseCustomerActivity implements Pro
         } else {
             request.executePostRequest(url, response -> {
                 try {
-                    Log.d(TAG, response);
+                    MessageFragment msgFragment = (MessageFragment) getSupportFragmentManager().findFragmentByTag("msgFrag");
                     if (response.equals("no results")) {
-                        getSupportFragmentManager().beginTransaction().remove(searchFragment).commit();
-                        MessageFragment msgFragment = (MessageFragment) getSupportFragmentManager().findFragmentByTag("msgFrag");
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        if(msgFragment == null){
+                        if (msgFragment == null) {
+                            getSupportFragmentManager().beginTransaction().remove(searchFragment).commit();
                             msgFragment = MessageFragment.newInstance(R.drawable.logo, "results");
-                            transaction.add(R.id.frameCustomer, msgFragment, "msgFrag").addToBackStack("HideMsgFrag").commit();
+                            getSupportFragmentManager().beginTransaction().add(R.id.frameCustomer, msgFragment, "msgFrag")
+                                    .addToBackStack(null).commit();
                             getSupportFragmentManager().beginTransaction().add(R.id.frameCustomer, searchFragment).addToBackStack(null).commit();
                         }
 
-
-//                        getSupportFragmentManager().beginTransaction().add(R.id.frameCustomer, msgFragment).addToBackStack(null).commit();
-//                        getSupportFragmentManager().beginTransaction().add(R.id.frameCustomer, searchFragment).addToBackStack(null).commit();
                     } else {
+                        if (msgFragment != null) {
+                            getSupportFragmentManager().beginTransaction().remove(msgFragment).commit();
+                        }
+
                         Gson gson = new Gson();
                         Catalogue catalogue = gson.fromJson(response, Catalogue.class);
                         ProductCustomerAdapter myAdapter = new ProductCustomerAdapter(catalogue.getProducts());

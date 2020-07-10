@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -237,6 +238,7 @@ class BaseCustomerActivity extends AppCompatActivity implements SearchFragment.O
 
     @Override
     public void onEnter(String word){
+
     }
 
     @Override

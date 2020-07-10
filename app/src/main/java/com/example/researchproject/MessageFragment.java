@@ -70,7 +70,14 @@ public class MessageFragment extends Fragment {
         TextView tvMsg = view.findViewById(R.id.tvMessage);
 
         imgMsg.setImageResource(image);
-        tvMsgTitle.setText("Your " + text + " is empty!");
-        tvMsg.setText("Start adding items to your " + text);
+
+        if(text.equals("nothing")){
+            tvMsgTitle.setText("Nothing to see here - yet!");
+            tvMsg.setText("More products are on their way, so please check back later.");
+        }else{
+
+            tvMsgTitle.setText("Your " + text + " is empty!");
+            tvMsg.setText("Start adding items to your " + text);
+        }
     }
 }
