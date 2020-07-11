@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.example.researchproject.Admin.AddProductFragment;
@@ -95,39 +97,61 @@ public class ProductCustomerActivity extends BaseCustomerActivity implements Pro
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (data != null) {
+                Bitmap image = null;
                 if (requestCode == REQUEST_CAMERA) {
-                    Bitmap photo = (Bitmap) data.getExtras().get("data");
-//                        String url = "https://myprojectstore.000webhostapp.com/";
-                    String url = "http://100.25.155.48/";
-
-                    //Converting Bitmap to string
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    assert photo != null;
-                    photo.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                    byte[] imageBytes = baos.toByteArray();
-                    String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-
-                    VolleyService request = new VolleyService(ProductCustomerActivity.this);
-                    request.executePostRequest(url, response -> {
-                        try {
-                            if (response.equals("no results")) {
-                                //Toast.makeText(getContext(), "New Product has been added!", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Log.e("here", "here");
-                                Gson gson = new Gson();
-                                Catalogue catalogue = gson.fromJson(response, Catalogue.class);
-                                ProductCustomerAdapter myAdapter = new ProductCustomerAdapter(catalogue.getProducts());
-                                RecyclerView recyclerView = findViewById(R.id.recyclerViewProducts);
-                                recyclerView.setLayoutManager(new LinearLayoutManager(ProductCustomerActivity.this));
-                                recyclerView.setAdapter(myAdapter);
-                                myAdapter.setListener(ProductCustomerActivity.this);
-                            }
-                            Log.d(TAG, response);
-                        } catch (Exception ex) {
-                            Log.e(TAG, ex.getMessage());
-                        }
-                    }, "searchByImage", encodedImage);
+                    image = (Bitmap) data.getExtras().get("data");
                 }
+                if (requestCode == SELECT_FILE) {
+                    Uri filePath = data.getData();
+                    try {
+                        image = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+//              String url = "https://myprojectstore.000webhostapp.com/";
+                String url = "http://100.25.155.48/";
+
+                //Converting Bitmap to string
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                assert image != null;
+                image.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                byte[] imageBytes = baos.toByteArray();
+                String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+
+                //getResults("searchByImage", encodedImage);
+                request.executePostRequest(url, response -> {
+                    try {
+                        View view = this.getCurrentFocus();
+                        if (view != null) {
+                            hideKeyboardFrom(getApplicationContext(), view);
+                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        }
+                        MessageFragment msgFragment = (MessageFragment) getSupportFragmentManager().findFragmentByTag("msgFrag");
+                        if (response.equals("no results")) {
+                            Log.e("entras2", "no results");
+                            msgFragment = MessageFragment.newInstance(R.drawable.logo, "nothing");
+                            getSupportFragmentManager().beginTransaction().add(R.id.frameMsg, msgFragment, "msgFrag")
+                                    .addToBackStack(null).commit();
+                        } else {
+                            if (msgFragment != null) {
+                                getSupportFragmentManager().beginTransaction().detach(msgFragment).commit();
+                            }
+                            Log.e("entras3", response);
+                            Gson gson = new Gson();
+                            Catalogue catalogue = gson.fromJson(response, Catalogue.class);
+                            ProductCustomerAdapter myAdapter = new ProductCustomerAdapter(catalogue.getProducts());
+                            RecyclerView recyclerView = findViewById(R.id.recyclerViewProducts);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(ProductCustomerActivity.this));
+                            recyclerView.setAdapter(myAdapter);
+                            myAdapter.setListener(ProductCustomerActivity.this);
+                        }
+                        Log.d(TAG, response);
+                    } catch (Exception ex) {
+                        Log.e(TAG, ex.getMessage());
+                    }
+                }, "searchByImage", encodedImage);
             }
         }
     }
@@ -143,36 +167,40 @@ public class ProductCustomerActivity extends BaseCustomerActivity implements Pro
         if (word.isEmpty()) {
             Toast.makeText(ProductCustomerActivity.this, "Please enter a word to start searching!", Toast.LENGTH_LONG).show();
         } else {
-            request.executePostRequest(url, response -> {
-                try {
-                    MessageFragment msgFragment = (MessageFragment) getSupportFragmentManager().findFragmentByTag("msgFrag");
-                    if (response.equals("no results")) {
-                        if (msgFragment == null) {
-                            getSupportFragmentManager().beginTransaction().remove(searchFragment).commit();
-                            msgFragment = MessageFragment.newInstance(R.drawable.logo, "results");
-                            getSupportFragmentManager().beginTransaction().add(R.id.frameCustomer, msgFragment, "msgFrag")
-                                    .addToBackStack(null).commit();
-                            getSupportFragmentManager().beginTransaction().add(R.id.frameCustomer, searchFragment).addToBackStack(null).commit();
-                        }
-
-                    } else {
-                        if (msgFragment != null) {
-                            getSupportFragmentManager().beginTransaction().remove(msgFragment).commit();
-                        }
-
-                        Gson gson = new Gson();
-                        Catalogue catalogue = gson.fromJson(response, Catalogue.class);
-                        ProductCustomerAdapter myAdapter = new ProductCustomerAdapter(catalogue.getProducts());
-                        RecyclerView recyclerView = findViewById(R.id.recyclerViewProducts);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(ProductCustomerActivity.this));
-                        recyclerView.setAdapter(myAdapter);
-                        myAdapter.setListener(ProductCustomerActivity.this);
-                    }
-                    Log.d(TAG, response);
-                } catch (Exception ex) {
-                    Log.e(TAG, ex.getMessage());
-                }
-            }, "searchProductsByName", word.trim());
+            getResults("searchProductsByName", word.trim());
         }
+    }
+
+    public void getResults(String namePost, String contentPost) {
+        request.executePostRequest(url, response -> {
+            try {
+                View view = this.getCurrentFocus();
+                if (view != null) {
+                    hideKeyboardFrom(getApplicationContext(), view);
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+                MessageFragment msgFragment = (MessageFragment) getSupportFragmentManager().findFragmentByTag("msgFrag");
+                if (response.equals("no results")) {
+                    msgFragment = MessageFragment.newInstance(R.drawable.logo, "nothing");
+                    getSupportFragmentManager().beginTransaction().add(R.id.frameMsg, msgFragment, "msgFrag")
+                            .addToBackStack(null).commit();
+                } else {
+                    if (msgFragment != null) {
+                        getSupportFragmentManager().beginTransaction().detach(msgFragment).commit();
+                    }
+                    Gson gson = new Gson();
+                    Catalogue catalogue = gson.fromJson(response, Catalogue.class);
+                    ProductCustomerAdapter myAdapter = new ProductCustomerAdapter(catalogue.getProducts());
+                    RecyclerView recyclerView = findViewById(R.id.recyclerViewProducts);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(ProductCustomerActivity.this));
+                    recyclerView.setAdapter(myAdapter);
+                    myAdapter.setListener(ProductCustomerActivity.this);
+                }
+                Log.d(TAG, response);
+            } catch (Exception ex) {
+                Log.e(TAG, ex.getMessage());
+            }
+        }, namePost, contentPost);
     }
 }

@@ -81,63 +81,49 @@ public class AddProductFragment extends Fragment {
         ImageView imgClose = view.findViewById(R.id.imgBack);
         Button btnEditProd = view.findViewById(R.id.btnEditProduct);
 
-        imgClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().getSupportFragmentManager().beginTransaction().remove(AddProductFragment.this).commit();
-                mListener.onClose();
-            }
+        imgClose.setOnClickListener(view1 -> {
+            getActivity().getSupportFragmentManager().beginTransaction().remove(AddProductFragment.this).commit();
+            mListener.onClose();
         });
 
-        imgProd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectImage();
-            }
-        });
+        imgProd.setOnClickListener(v -> selectImage());
 
-        btnEditProd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnEditProd.setOnClickListener(v -> {
 //                String url = "https://myprojectstore.000webhostapp.com/product/";
-                String url = "http://100.25.155.48/product/";
+            String url = "http://100.25.155.48/product/";
 
-                Product newProduct = new Product("1234",etProdBand.getText().toString(),etCategory.getText().toString(),Double.parseDouble(etCostPrice.getText().toString()),
-                        etProdDesc.getText().toString(),300,Integer.parseInt(etInvLevel.getText().toString()),Integer.parseInt(etInvWarnLevel.getText().toString()),
-                        tvProdName.getText().toString(),Double.parseDouble(etPrice.getText().toString()),encodedImage);
+            Product newProduct = new Product("1234",etProdBand.getText().toString(),etCategory.getText().toString(),Double.parseDouble(etCostPrice.getText().toString()),
+                    etProdDesc.getText().toString(),300,Integer.parseInt(etInvLevel.getText().toString()),Integer.parseInt(etInvWarnLevel.getText().toString()),
+                    tvProdName.getText().toString(),Double.parseDouble(etPrice.getText().toString()),encodedImage);
 
-                Gson gson = new Gson();
-                final String jsonInString = gson.toJson(newProduct);
-                VolleyService request = new VolleyService(getContext());
-                request.executePostRequest(url, new VolleyService.VolleyCallback() {
-                    @Override
-                    public void getResponse(String response) {
-                        try {
-                            if(response.equals("true")){
-                                Toast.makeText(getContext(), "New Product has been added!", Toast.LENGTH_SHORT).show();
-                                Thread thread = new Thread() {
-                                    @Override
-                                    public void run() {
-                                        try {
-                                            Thread.sleep(2500); // wait before going to login
-                                            getActivity().getSupportFragmentManager().beginTransaction().remove(AddProductFragment.this).commit();
-                                            mListener.onClose();                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                };
-                                thread.start();
+            Gson gson = new Gson();
+            final String jsonInString = gson.toJson(newProduct);
+            VolleyService request = new VolleyService(getContext());
+            request.executePostRequest(url, response -> {
+                try {
+                    if(response.equals("true")){
+                        Toast.makeText(getContext(), "New Product has been added!", Toast.LENGTH_SHORT).show();
+                        Thread thread = new Thread() {
+                            @Override
+                            public void run() {
+                                try {
+                                    Thread.sleep(2500); // wait before going to login
+                                    getActivity().getSupportFragmentManager().beginTransaction().remove(AddProductFragment.this).commit();
+                                    mListener.onClose();                                        } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
-                            else {
-                                Toast.makeText(getContext(), "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
-                            }
-                            Log.d(TAG, response);
-                        } catch (Exception ex) {
-                            Log.e(TAG, ex.getMessage());
-                        }
+                        };
+                        thread.start();
                     }
-                }, "addProduct", jsonInString);
-            }
+                    else {
+                        Toast.makeText(getContext(), "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
+                    }
+                    Log.d(TAG, response);
+                } catch (Exception ex) {
+                    Log.e(TAG, ex.getMessage());
+                }
+            }, "addProduct", jsonInString);
         });
     }
 

@@ -1,5 +1,7 @@
 package com.example.researchproject.Customer;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,13 +21,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 
-import com.example.researchproject.Admin.ProductAdminActivity;
 import com.example.researchproject.Classes.Cart;
 import com.example.researchproject.Classes.ProductOrdered;
 import com.example.researchproject.R;
 import com.example.researchproject.SearchFragment;
-import com.example.researchproject.TestCamActivity;
 import com.example.researchproject.VolleyService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
@@ -36,7 +37,7 @@ import java.util.Map;
 
 import ru.nikartm.support.ImageBadgeView;
 
-class BaseCustomerActivity extends AppCompatActivity implements SearchFragment.OnSearchListener {
+public class BaseCustomerActivity extends AppCompatActivity implements SearchFragment.OnSearchListener {
     private int REQUEST_CODE_PERMISSIONS = 101;
     private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE"};
     protected static final int REQUEST_CAMERA = 10;
@@ -154,7 +155,7 @@ class BaseCustomerActivity extends AppCompatActivity implements SearchFragment.O
         if (allPermissionsGranted()) {
             final CharSequence[] items = {"Take Photo", "Choose from Gallery", "Cancel"};
             android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-            builder.setTitle("Upload Photo!");
+            builder.setTitle("How would you like to search?");
             builder.setItems(items, (dialog, item) -> {
                 if (items[item].equals("Take Photo")) {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -234,15 +235,26 @@ class BaseCustomerActivity extends AppCompatActivity implements SearchFragment.O
     @Override
     public void onClose() {
         toolbar.setVisibility(View.VISIBLE);
+        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     @Override
     public void onEnter(String word){
-
     }
 
     @Override
     public void onClick() {
         showOptions();
+    }
+
+    public static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 }

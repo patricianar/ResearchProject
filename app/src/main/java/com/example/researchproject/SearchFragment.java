@@ -61,7 +61,7 @@ public class SearchFragment extends Fragment {
         });
 
         imgClose.setOnClickListener(view1 -> {
-            requireActivity().getSupportFragmentManager().beginTransaction().remove(SearchFragment.this).commit();
+            //requireActivity().getSupportFragmentManager().beginTransaction().remove(SearchFragment.this).commit();
             mListener.onClose();
         });
     }
