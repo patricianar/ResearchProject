@@ -3,10 +3,13 @@ package com.example.researchproject;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.researchproject.Classes.Order;
@@ -43,6 +46,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.MyCustomView
 
     class MyCustomViewHolder extends RecyclerView.ViewHolder {
         TextView tvOrderId, tvDate, tvStatus, tvTotal;
+        ConstraintLayout orderLayout;
 
         MyCustomViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -50,6 +54,15 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.MyCustomView
             tvDate = itemView.findViewById(R.id.tvDate);
             tvStatus = itemView.findViewById(R.id.tvStatus);
             tvTotal = itemView.findViewById(R.id.tvTotal);
+            orderLayout = itemView.findViewById(R.id.orderLayout);
+
+            final FragmentManager manager =  ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager();
+            orderLayout.setOnClickListener(v -> {
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.add(R.id.frameOrder, OrderDetailFragment.newInstance(ordersArray[getAdapterPosition()]));
+                transaction.addToBackStack(null);
+                transaction.commit();
+            });
         }
     }
 }

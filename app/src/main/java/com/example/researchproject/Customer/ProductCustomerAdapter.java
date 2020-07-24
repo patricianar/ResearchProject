@@ -56,8 +56,8 @@ public class ProductCustomerAdapter extends RecyclerView.Adapter<ProductCustomer
 
         public MyCustomViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvProductName = itemView.findViewById(R.id.tvOrderId);
-            tvProductPrice = itemView.findViewById(R.id.tvDate);
+            tvProductName = itemView.findViewById(R.id.tvProductName);
+            tvProductPrice = itemView.findViewById(R.id.tvProductPrice);
             imgProduct = itemView.findViewById(R.id.imgProduct);
             btnAddToCart = itemView.findViewById(R.id.btnAddToCart);
 

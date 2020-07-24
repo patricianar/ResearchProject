@@ -33,14 +33,8 @@ import java.io.IOException;
 
 import static android.app.Activity.RESULT_OK;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link UpdateProductFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class UpdateProductFragment extends Fragment {
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "product";
+    private static final String PRODUCT = "product";
     private static final String TAG = "UpdateProductFragment";
     private static final int PICK_IMAGE_REQUEST = 11;
     private ImageView imgProd;
@@ -52,18 +46,10 @@ public class UpdateProductFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @return A new instance of fragment ProductDetaiilFragment.
-     */
-
     public static UpdateProductFragment newInstance(Product param1) {
         UpdateProductFragment fragment = new UpdateProductFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_PARAM1, param1);
+        args.putSerializable(PRODUCT, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,7 +58,7 @@ public class UpdateProductFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = (Product) getArguments().getSerializable(ARG_PARAM1);
+            mParam1 = (Product) getArguments().getSerializable(PRODUCT);
         }
     }
 

@@ -7,17 +7,24 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.example.researchproject.Classes.Catalogue;
 import com.example.researchproject.Classes.Product;
+import com.example.researchproject.Customer.ProductCustomerActivity;
+import com.example.researchproject.Customer.ProductCustomerAdapter;
 import com.example.researchproject.MessageFragment;
 import com.example.researchproject.R;
 import com.example.researchproject.SearchFragment;
@@ -30,6 +37,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -120,46 +128,97 @@ public class ProductAdminActivity extends BaseAdminActivity implements UpdatePro
 
                 Catalogue catalogue = new Catalogue();
                 Gson gson = new Gson();
-
-                if (requestCode == FILE_REQUEST_CODE_ADD) {
+                Bitmap image = null;
+                switch (requestCode){
+                    case FILE_REQUEST_CODE_ADD:
                     readCSVAddProducts(uri);
                     catalogue.setProducts(productsList);
                     String jsonCatalogue = gson.toJson(catalogue);
-                    request.executePostRequest(url, new VolleyService.VolleyCallback() {
-                        @Override
-                        public void getResponse(String response) {
-                            try {
-                                if (response.equals("true")) {
-                                    Toast.makeText(ProductAdminActivity.this, "Your catalogue has been updated", Toast.LENGTH_SHORT).show();
-                                    removeMsg();
-                                    getProducts();
-                                }
-                                productsList.clear();
-                                Log.d(TAG, response);
-                            } catch (Exception ex) {
-                                Log.e(TAG, ex.getMessage());
+                    request.executePostRequest(url, response -> {
+                        try {
+                            if (response.equals("true")) {
+                                Toast.makeText(ProductAdminActivity.this, "Your catalogue has been updated", Toast.LENGTH_SHORT).show();
+                                removeMsg();
+                                getProducts();
                             }
+                            productsList.clear();
+                            Log.d(TAG, response);
+                        } catch (Exception ex) {
+                            Log.e(TAG, ex.getMessage());
                         }
                     }, "products", jsonCatalogue);
-                } else if (requestCode == FILE_REQUEST_CODE_UPDATE) {
+                    break;
+                case FILE_REQUEST_CODE_UPDATE:
                     readCSVUpdateProducts(uri);
                     catalogue.setProducts(productsList);
-                    String jsonCatalogue = gson.toJson(catalogue);
-                    request.executePostRequest(url, new VolleyService.VolleyCallback() {
-                        @Override
-                        public void getResponse(String response) {
-                            try {
-                                if (response.contains("true")) {
-                                    Toast.makeText(ProductAdminActivity.this, "Your catalogue has been updated", Toast.LENGTH_SHORT).show();
-                                    getProducts();
-                                }
-                                productsList.clear();
-                                Log.d(TAG, response);
-                            } catch (Exception ex) {
-                                Log.e(TAG, ex.getMessage());
+                    jsonCatalogue = gson.toJson(catalogue);
+                    request.executePostRequest(url, response -> {
+                        try {
+                            if (response.contains("true")) {
+                                Toast.makeText(ProductAdminActivity.this, "Your catalogue has been updated", Toast.LENGTH_SHORT).show();
+                                getProducts();
                             }
+                            productsList.clear();
+                            Log.d(TAG, response);
+                        } catch (Exception ex) {
+                            Log.e(TAG, ex.getMessage());
                         }
                     }, "editProductByList", jsonCatalogue);
+                    break;
+                    case REQUEST_CAMERA:
+                        image = (Bitmap) resultData.getExtras().get("data");
+                        break;
+                    case SELECT_FILE:
+                        Uri filePath = resultData.getData();
+                        try {
+                            image = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                if (requestCode == REQUEST_CAMERA || requestCode == SELECT_FILE){
+                    String url = "http://100.25.155.48/";
+
+                    //Converting Bitmap to string
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    assert image != null;
+                    image.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                    byte[] imageBytes = baos.toByteArray();
+                    String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+
+                    //getResults("searchByImage", encodedImage);
+                    request.executePostRequest(url, response -> {
+                        try {
+                            View view = this.getCurrentFocus();
+                            if (view != null) {
+                                hideKeyboardFrom(getApplicationContext(), view);
+                                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                            }
+                            MessageFragment msgFragment = (MessageFragment) getSupportFragmentManager().findFragmentByTag("msgFrag");
+                            if (response.equals("no results")) {
+                                Log.e("entras2", "no results");
+                                msgFragment = MessageFragment.newInstance(R.drawable.logo, "nothing");
+                                getSupportFragmentManager().beginTransaction().add(R.id.frameProdAdmin, msgFragment, "msgFrag")
+                                        .addToBackStack(null).commit();
+                            } else {
+                                if (msgFragment != null) {
+                                    getSupportFragmentManager().beginTransaction().detach(msgFragment).commit();
+                                }
+                                ProductAdminAdapter myAdapter = new ProductAdminAdapter(catalogue.getProducts());
+                                RecyclerView recyclerView = findViewById(R.id.recyclerViewProducts);
+                                recyclerView.setLayoutManager(new LinearLayoutManager(ProductAdminActivity.this));
+                                recyclerView.setAdapter(myAdapter);
+                                enableSwipeToDeleteAndUndo(myAdapter);
+                            }
+                            Log.d(TAG, response);
+                        } catch (Exception ex) {
+                            Log.e(TAG, ex.getMessage());
+                        }
+                    }, "searchByImage", encodedImage);
                 }
             }
         }
@@ -291,4 +350,45 @@ public class ProductAdminActivity extends BaseAdminActivity implements UpdatePro
         getProducts();
     }
 
+    @Override
+    public void onEnter(String word) {
+        if (word.isEmpty()) {
+            Toast.makeText(ProductAdminActivity.this, "Please enter a word to start searching!", Toast.LENGTH_LONG).show();
+        } else {
+            getResults("searchProductsByName", word.trim());
+        }
+    }
+
+    public void getResults(String namePost, String contentPost) {
+        request.executePostRequest(url, response -> {
+            try {
+                View view = this.getCurrentFocus();
+                if (view != null) {
+                    hideKeyboardFrom(getApplicationContext(), view);
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+                MessageFragment msgFragment = (MessageFragment) getSupportFragmentManager().findFragmentByTag("msgFrag");
+                if (response.equals("no results")) {
+                    msgFragment = MessageFragment.newInstance(R.drawable.logo, "nothing");
+                    getSupportFragmentManager().beginTransaction().add(R.id.frameProdAdmin, msgFragment, "msgFrag")
+                            .addToBackStack(null).commit();
+                } else {
+                    if (msgFragment != null) {
+                        getSupportFragmentManager().beginTransaction().detach(msgFragment).commit();
+                    }
+                    Gson gson = new Gson();
+                    Catalogue catalogue = gson.fromJson(response, Catalogue.class);
+                    ProductAdminAdapter myAdapter = new ProductAdminAdapter(catalogue.getProducts());
+                    RecyclerView recyclerView = findViewById(R.id.recyclerViewProducts);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(ProductAdminActivity.this));
+                    recyclerView.setAdapter(myAdapter);
+                    enableSwipeToDeleteAndUndo(myAdapter);
+                }
+                Log.d(TAG, response);
+            } catch (Exception ex) {
+                Log.e(TAG, ex.getMessage());
+            }
+        }, namePost, contentPost);
+    }
 }

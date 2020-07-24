@@ -1,10 +1,11 @@
 package com.example.researchproject.Classes;
 
-import java.util.List;
+import java.io.Serializable;
 
-public class Customer
+public class Customer implements Serializable
 {
-    private List<Address> addresses;
+    private Address address;
+    private Card card;
     private String email;
     private String first_name;
     private int id;
@@ -23,12 +24,20 @@ public class Customer
         this.password = password;
     }
 
-    public List<Address> getAddresses() {
-        return addresses;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
+    public void setAddresses(Address address) {
+        this.address = address;
+    }
+    
+    public Card getCard() {
+        return card;
+    }
+
+    public void setCard(Card card) {
+        this.card = card;
     }
 
     public String getEmail() {

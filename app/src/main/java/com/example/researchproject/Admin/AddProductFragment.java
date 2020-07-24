@@ -31,11 +31,6 @@ import java.io.IOException;
 
 import static android.app.Activity.RESULT_OK;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AddProductFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class AddProductFragment extends Fragment {
     private static final String TAG = "ProductAddFragment";
     private static final int PICK_IMAGE_REQUEST = 11;

@@ -37,20 +37,17 @@ public class OrdersCustomerActivity extends BaseCustomerActivity {
         SharedPreferences sharedPrefUser = getSharedPreferences("User", MODE_PRIVATE);
         String email = sharedPrefUser.getString("Email", "");
 
-        request.executePostRequest(url, new VolleyService.VolleyCallback() {
-            @Override
-            public void getResponse(String response) {
-                try {
-                    Gson gson = new Gson();
-                    Order[] order = gson.fromJson(response, Order[].class);
-                    OrderAdapter myAdapter = new OrderAdapter(order);
-                    RecyclerView recyclerView = findViewById(R.id.recyclerViewOrders);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(OrdersCustomerActivity.this));
-                    recyclerView.setAdapter(myAdapter);
-                    Log.d("Response", response);
-                } catch (Exception ex) {
-                    Log.e("Request: ", ex.getMessage());
-                }
+        request.executePostRequest(url, response -> {
+            try {
+                Gson gson = new Gson();
+                Order[] order = gson.fromJson(response, Order[].class);
+                OrderAdapter myAdapter = new OrderAdapter(order);
+                RecyclerView recyclerView = findViewById(R.id.recyclerViewOrders);
+                recyclerView.setLayoutManager(new LinearLayoutManager(OrdersCustomerActivity.this));
+                recyclerView.setAdapter(myAdapter);
+                Log.d("Response", response);
+            } catch (Exception ex) {
+                Log.e("Request: ", ex.getMessage());
             }
         }, "getOrderByEmail", email);
 

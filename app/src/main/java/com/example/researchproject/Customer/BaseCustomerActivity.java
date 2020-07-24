@@ -223,8 +223,8 @@ public class BaseCustomerActivity extends AppCompatActivity implements SearchFra
                         //finish();
                         return true;
                     case R.id.account:
-                        //startActivity(new Intent(getApplicationContext(), MyEventsActivity.class));
-                        //finish();
+                        startActivity(new Intent(getApplicationContext(), AccountCustomerActivity.class));
+                        finish();
                         return true;
                 }
                 return false;

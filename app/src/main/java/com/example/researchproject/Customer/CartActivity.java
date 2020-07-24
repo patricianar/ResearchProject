@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.researchproject.Classes.Address;
 import com.example.researchproject.Classes.Catalogue;
 import com.example.researchproject.Classes.Customer;
 import com.example.researchproject.Classes.Order;
@@ -29,7 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class CartActivity extends AppCompatActivity implements ProductCartAdapter.CallbackCart {
+public class CartActivity extends AppCompatActivity implements ProductCartAdapter.CallbackCart,
+AccountFragment.OnAccountClickedListener, PaymentFragment.OnPaymentClickedListener, MapsFragment.OnMapsListener{
     private static final String TAG = "CartActivity";
     RecyclerView recyclerView;
     TextView tvSubtotal;
@@ -37,6 +39,7 @@ public class CartActivity extends AppCompatActivity implements ProductCartAdapte
     VolleyService request;
     List<Product> productsList;
     DecimalFormat decimalFormat;
+    AccountFragment accountFragment;
     double subTotal;
 
     @Override
@@ -58,20 +61,19 @@ public class CartActivity extends AppCompatActivity implements ProductCartAdapte
         btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //postOrder();
-                startActivity(new Intent(CartActivity.this, InfoCustomerActivity.class));
+                accountFragment = new AccountFragment();
+                getSupportFragmentManager().beginTransaction().add(R.id.frameCart, accountFragment).addToBackStack(null).commit();
             }
         });
     }
 
-    private void postOrder() {
+    private void postOrder(Customer customer) {
 //        String url = "https://myprojectstore.000webhostapp.com/order/";
         String url = "http://100.25.155.48/order/";
 
         Order order = new Order();
-        Customer customer = new Customer();
         final SharedPreferences sharedPrefUser = getSharedPreferences("User", MODE_PRIVATE);
-        customer.setEmail(sharedPrefUser.getString("Email", ""));
+//        customer.setEmail(sharedPrefUser.getString("Email", ""));
         order.setCustomer(customer);
 
         List<ProductOrdered> prodOrderedList = new ArrayList<>();
@@ -131,7 +133,7 @@ public class CartActivity extends AppCompatActivity implements ProductCartAdapte
     }
 
     private void getProducts() {
-        String url = "https://myprojectstore.000webhostapp.com/product/";
+        String url = "http://100.25.155.48/product/";
         String productsIds = "";
 
         //gets the contents of shared preferences
@@ -148,31 +150,28 @@ public class CartActivity extends AppCompatActivity implements ProductCartAdapte
             productsIds = productsIds.substring(0, productsIds.length() - 1);
             Log.e("test", productsIds);
 
-            request.executePostRequest(url, new VolleyService.VolleyCallback() {
-                @Override
-                public void getResponse(String response) {
-                    try {
-                        if (response.contains("products")) {
-                            Gson gson = new Gson();
-                            Catalogue catalogue = gson.fromJson(response, Catalogue.class);
-                            productsList = catalogue.getProducts();
-                            ProductCartAdapter myAdapter = new ProductCartAdapter(productsList);
-                            myAdapter.setListener(CartActivity.this);
-                            recyclerView.setLayoutManager(new LinearLayoutManager(CartActivity.this));
-                            recyclerView.setAdapter(myAdapter);
-                            for (Product product : catalogue.getProducts()) {
-                                int qty = sharedPrefCart.getInt(String.valueOf(product.getId()), 0);
-                                subTotal += qty * product.getPrice();
-                            }
-                            tvSubtotal.setText(decimalFormat.format(subTotal));
-                            //myAdapter.setListener(ProductCustomerActivity.this);
-                        } else {
-                            Toast.makeText(CartActivity.this, "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
+            request.executePostRequest(url, response -> {
+                try {
+                    if (response.contains("products")) {
+                        Gson gson = new Gson();
+                        Catalogue catalogue = gson.fromJson(response, Catalogue.class);
+                        productsList = catalogue.getProducts();
+                        ProductCartAdapter myAdapter = new ProductCartAdapter(productsList);
+                        myAdapter.setListener(CartActivity.this);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(CartActivity.this));
+                        recyclerView.setAdapter(myAdapter);
+                        for (Product product : catalogue.getProducts()) {
+                            int qty = sharedPrefCart.getInt(String.valueOf(product.getId()), 0);
+                            subTotal += qty * product.getPrice();
                         }
-                        Log.d(TAG, response);
-                    } catch (Exception ex) {
-                        Log.e(TAG, ex.getMessage());
+                        tvSubtotal.setText(decimalFormat.format(subTotal));
+                        //myAdapter.setListener(ProductCustomerActivity.this);
+                    } else {
+                        Toast.makeText(CartActivity.this, "Something went wrong, please try again!", Toast.LENGTH_SHORT).show();
                     }
+                    Log.d(TAG, response);
+                } catch (Exception ex) {
+                    Log.e(TAG, ex.getMessage());
                 }
             }, "productsCart", productsIds);
         }
@@ -192,5 +191,26 @@ public class CartActivity extends AppCompatActivity implements ProductCartAdapte
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.frameCart, MessageFragment.newInstance(R.drawable.logo, "cart")).commit();
         }
+    }
+
+    @Override
+    public void onAddressClicked() {
+        getSupportFragmentManager().beginTransaction().add(R.id.frameAccount, new MapsFragment()).addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction().remove(accountFragment).commit();
+    }
+
+    @Override
+    public void onAccountClicked(Customer customer) {
+        getSupportFragmentManager().beginTransaction().add(R.id.frameCart, PaymentFragment.newInstance(customer, "Cart")).addToBackStack(null).commit();
+    }
+
+    @Override
+    public void onPaymentClicked(Customer customer) {
+        postOrder(customer);
+    }
+
+    @Override
+    public void onVerifyAddress(Address address) {
+        getSupportFragmentManager().beginTransaction().add(R.id.frameAccount, AccountFragment.newInstance(address)).addToBackStack(null).commit();
     }
 }

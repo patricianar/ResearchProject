@@ -32,7 +32,7 @@ class BaseAdminActivity extends AppCompatActivity implements SearchFragment.OnSe
     protected static final int FILE_REQUEST_CODE_UPDATE = 10;
     private int REQUEST_CODE_PERMISSIONS = 101;
     private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE"};
-    protected static final int REQUEST_CAMERA = 10;
+    protected static final int REQUEST_CAMERA = 100;
     protected static final int SELECT_FILE = 11;
     private Toolbar toolbar;
     protected SearchFragment searchFragment;
@@ -63,7 +63,7 @@ class BaseAdminActivity extends AppCompatActivity implements SearchFragment.OnSe
         switch (item.getItemId()) {
             case R.id.search:
                 searchFragment = new SearchFragment();
-                getSupportFragmentManager().beginTransaction().add(R.id.frameCustomer, searchFragment).addToBackStack(null).commit();
+                getSupportFragmentManager().beginTransaction().add(R.id.prodDetailFrag, searchFragment).addToBackStack(null).commit();
                 toolbar.setVisibility(View.INVISIBLE);
                 return true;
             case R.id.logout:

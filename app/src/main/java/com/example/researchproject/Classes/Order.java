@@ -1,8 +1,9 @@
 package com.example.researchproject.Classes;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Order {
+public class Order implements Serializable {
     private Customer customer;
     private String customer_message;
     private String date_created;

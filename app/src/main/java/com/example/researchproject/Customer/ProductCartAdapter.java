@@ -1,7 +1,6 @@
 package com.example.researchproject.Customer;
 
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.researchproject.Classes.Product;
 import com.example.researchproject.R;
-import com.example.researchproject.VolleyService;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
 
@@ -80,9 +77,9 @@ public class ProductCartAdapter extends RecyclerView.Adapter<ProductCartAdapter.
 
         public MyCustomViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvProductName = itemView.findViewById(R.id.tvOrderId);
-            tvProductPrice = itemView.findViewById(R.id.tvDate);
-            tvProductQty = itemView.findViewById(R.id.tvStatus);
+            tvProductName = itemView.findViewById(R.id.tvProductName);
+            tvProductPrice = itemView.findViewById(R.id.tvProductPrice);
+            tvProductQty = itemView.findViewById(R.id.tvQty);
             tvTotalPrice = itemView.findViewById(R.id.tvTotalPrice);
             imgProduct = itemView.findViewById(R.id.imgProduct);
             btnMinus = itemView.findViewById(R.id.btnMinus);

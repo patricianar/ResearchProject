@@ -1,10 +1,12 @@
 package com.example.researchproject.Classes;
 
-public class Address {
+import java.io.Serializable;
+
+public class Address implements Serializable {
     private String city;
     private String country;
     private String postal_code;
-    private String state;
+    private String province;
     private String street;
 
     public String getCity() {
@@ -31,12 +33,12 @@ public class Address {
         this.postal_code = postal_code;
     }
 
-    public String getState() {
-        return state;
+    public String getProvince() {
+        return province;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setProvince(String state) {
+        this.province = state;
     }
 
     public String getStreet() {
