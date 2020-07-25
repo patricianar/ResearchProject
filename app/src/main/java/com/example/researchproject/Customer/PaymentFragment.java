@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.researchproject.Classes.Address;
 import com.example.researchproject.Classes.Customer;
@@ -98,8 +99,16 @@ public class PaymentFragment extends Fragment {
         }
 
         btnContinue.setOnClickListener(v -> {
-                    updateCustomerDetails();
-                    mListener.onPaymentClicked(mCustomer);
+                    if (etCardNumber.getText().toString().length() > 10){
+                        if(etCVV.getText().toString().length() > 2 && etCVV.getText().toString().length() < 5){
+                            updateCustomerDetails();
+                            mListener.onPaymentClicked(mCustomer);
+                        }else{
+                            Toast.makeText(getContext(), "Invalid CVV Number", Toast.LENGTH_LONG).show();
+                        }
+                    }else{
+                        Toast.makeText(getContext(), "Invalid Card Number", Toast.LENGTH_LONG).show();
+                    }
                 }
         );
     }

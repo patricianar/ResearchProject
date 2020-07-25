@@ -9,11 +9,12 @@ import android.util.Log;
 
 import com.example.researchproject.Classes.Order;
 import com.example.researchproject.OrderAdapter;
+import com.example.researchproject.OrderDetailFragment;
 import com.example.researchproject.R;
 import com.example.researchproject.VolleyService;
 import com.google.gson.Gson;
 
-public class OrdersCustomerActivity extends BaseCustomerActivity {
+public class OrdersCustomerActivity extends BaseCustomerActivity implements OrderDetailFragment.OnOrderDetailClickedListener {
     private static final String TAG = "OrdersCustomerActivity";
     VolleyService request;
     String url;
@@ -41,7 +42,7 @@ public class OrdersCustomerActivity extends BaseCustomerActivity {
             try {
                 Gson gson = new Gson();
                 Order[] order = gson.fromJson(response, Order[].class);
-                OrderAdapter myAdapter = new OrderAdapter(order);
+                OrderAdapter myAdapter = new OrderAdapter(order, "OrderCustomer");
                 RecyclerView recyclerView = findViewById(R.id.recyclerViewOrders);
                 recyclerView.setLayoutManager(new LinearLayoutManager(OrdersCustomerActivity.this));
                 recyclerView.setAdapter(myAdapter);
@@ -50,6 +51,11 @@ public class OrdersCustomerActivity extends BaseCustomerActivity {
                 Log.e("Request: ", ex.getMessage());
             }
         }, "getOrderByEmail", email);
+
+    }
+
+    @Override
+    public void onOrderDetailClicked() {
 
     }
 }

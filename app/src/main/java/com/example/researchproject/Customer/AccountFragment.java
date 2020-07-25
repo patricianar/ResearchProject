@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.researchproject.Classes.Address;
 import com.example.researchproject.Classes.Card;
@@ -89,8 +90,15 @@ public class AccountFragment extends Fragment {
 
         etAddress.setOnClickListener(v -> mListener.onAddressClicked());
         btnContinue.setOnClickListener(v -> {
-            updateCustomerDetails();
-            mListener.onAccountClicked(customer);
+            if (etFirstName.getText().toString().isEmpty() || etLastName.getText().toString().isEmpty()
+                    || etAddress.getText().toString().isEmpty() || etCity.getText().toString().isEmpty()
+                    || etProvince.getText().toString().isEmpty() || etPostalCode.getText().toString().isEmpty()
+                    || etCountry.getText().toString().isEmpty()) {
+                Toast.makeText(getContext(), "Please fill in all the fields", Toast.LENGTH_LONG).show();
+            } else {
+                updateCustomerDetails();
+                mListener.onAccountClicked(customer);
+            }
         });
     }
 
@@ -125,7 +133,7 @@ public class AccountFragment extends Fragment {
         shippingAddress.setPostal_code(etPostalCode.getText().toString());
         shippingAddress.setCountry(etCountry.getText().toString());
         customer.setAddresses(shippingAddress);
-        if(customer.getCard() == null){
+        if (customer.getCard() == null) {
             Card card = new Card();
             customer.setCard(card);
         }

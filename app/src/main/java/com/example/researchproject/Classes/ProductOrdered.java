@@ -1,6 +1,8 @@
 package com.example.researchproject.Classes;
 
-public class ProductOrdered {
+import java.io.Serializable;
+
+public class ProductOrdered implements Serializable {
     private int id;
     private String name;
     private int order_id;

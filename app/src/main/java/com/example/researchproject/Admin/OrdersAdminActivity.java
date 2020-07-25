@@ -8,11 +8,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.researchproject.Classes.Order;
 import com.example.researchproject.OrderAdapter;
+import com.example.researchproject.OrderDetailFragment;
 import com.example.researchproject.R;
 import com.example.researchproject.VolleyService;
 import com.google.gson.Gson;
 
-public class OrdersAdminActivity extends BaseAdminActivity {
+public class OrdersAdminActivity extends BaseAdminActivity implements OrderDetailFragment.OnOrderDetailClickedListener {
     private static final String TAG = "OrdersAdminActivity";
     VolleyService request;
     String url;
@@ -40,7 +41,7 @@ public class OrdersAdminActivity extends BaseAdminActivity {
                     Log.d("Response", response);
                     Gson gson = new Gson();
                     Order[] order = gson.fromJson(response, Order[].class);
-                    OrderAdapter myAdapter = new OrderAdapter(order);
+                    OrderAdapter myAdapter = new OrderAdapter(order, "OrderAdmin");
                     RecyclerView recyclerView = findViewById(R.id.recyclerViewOrders);
                     recyclerView.setLayoutManager(new LinearLayoutManager(OrdersAdminActivity.this));
                     recyclerView.setAdapter(myAdapter);
@@ -50,6 +51,11 @@ public class OrdersAdminActivity extends BaseAdminActivity {
                 }
             }
         });
+
+    }
+
+    @Override
+    public void onOrderDetailClicked() {
 
     }
 }

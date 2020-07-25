@@ -17,9 +17,11 @@ import java.text.DecimalFormat;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.MyCustomViewHolder> {
     private Order[] ordersArray;
+    private String activity;
 
-    public OrderAdapter(Order[] ordersArray) {
+    public OrderAdapter(Order[] ordersArray, String activity) {
         this.ordersArray = ordersArray;
+        this.activity = activity;
     }
 
     @NonNull
@@ -59,7 +61,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.MyCustomView
             final FragmentManager manager =  ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager();
             orderLayout.setOnClickListener(v -> {
                 FragmentTransaction transaction = manager.beginTransaction();
-                transaction.add(R.id.frameOrder, OrderDetailFragment.newInstance(ordersArray[getAdapterPosition()]));
+                transaction.add(R.id.frameOrder, OrderDetailFragment.newInstance(ordersArray[getAdapterPosition()], activity));
                 transaction.addToBackStack(null);
                 transaction.commit();
             });

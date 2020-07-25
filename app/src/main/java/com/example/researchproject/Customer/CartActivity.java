@@ -21,17 +21,22 @@ import com.example.researchproject.Classes.Order;
 import com.example.researchproject.Classes.Product;
 import com.example.researchproject.Classes.ProductOrdered;
 import com.example.researchproject.MessageFragment;
+import com.example.researchproject.OrderDetailFragment;
 import com.example.researchproject.R;
 import com.example.researchproject.VolleyService;
 import com.google.gson.Gson;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class CartActivity extends AppCompatActivity implements ProductCartAdapter.CallbackCart,
-AccountFragment.OnAccountClickedListener, PaymentFragment.OnPaymentClickedListener, MapsFragment.OnMapsListener{
+        AccountFragment.OnAccountClickedListener, PaymentFragment.OnPaymentClickedListener, MapsFragment.OnMapsListener,
+        OrderDetailFragment.OnOrderDetailClickedListener {
     private static final String TAG = "CartActivity";
     RecyclerView recyclerView;
     TextView tvSubtotal;
@@ -40,6 +45,7 @@ AccountFragment.OnAccountClickedListener, PaymentFragment.OnPaymentClickedListen
     List<Product> productsList;
     DecimalFormat decimalFormat;
     AccountFragment accountFragment;
+    Order order;
     double subTotal;
 
     @Override
@@ -54,6 +60,7 @@ AccountFragment.OnAccountClickedListener, PaymentFragment.OnPaymentClickedListen
         sharedPrefCart = getSharedPreferences("Cart", MODE_PRIVATE);
         request = new VolleyService(this);
         decimalFormat = new DecimalFormat("$#.##");
+        order = new Order();
         getProducts();
 
         imgBack.setOnClickListener(view -> finish());
@@ -67,15 +74,7 @@ AccountFragment.OnAccountClickedListener, PaymentFragment.OnPaymentClickedListen
         });
     }
 
-    private void postOrder(Customer customer) {
-//        String url = "https://myprojectstore.000webhostapp.com/order/";
-        String url = "http://100.25.155.48/order/";
-
-        Order order = new Order();
-        final SharedPreferences sharedPrefUser = getSharedPreferences("User", MODE_PRIVATE);
-//        customer.setEmail(sharedPrefUser.getString("Email", ""));
-        order.setCustomer(customer);
-
+    private void fillOrder() {
         List<ProductOrdered> prodOrderedList = new ArrayList<>();
 
         for (Product product : productsList) {
@@ -89,10 +88,19 @@ AccountFragment.OnAccountClickedListener, PaymentFragment.OnPaymentClickedListen
         }
         order.setProductsOrdered(prodOrderedList);
 
-        double tax = subTotal * 0.05;
-        double total = subTotal + tax;
-        order.setTotal(total);
+        double shippingCost = 7.99 + subTotal * 0.01;
+        double tax = (subTotal + shippingCost) * 0.05;
+        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+        order.setTotal(subTotal);
         order.setTotal_tax(tax);
+        order.setShipping_cost(shippingCost);
+        order.setDate_created(currentDate);
+    }
+
+    private void postOrder() {
+        final SharedPreferences sharedPrefUser = getSharedPreferences("User", MODE_PRIVATE);
+//        String url = "https://myprojectstore.000webhostapp.com/order/";
+        String url = "http://100.25.155.48/order/";
 
         Gson gson = new Gson();
         final String jsonInString = gson.toJson(order);
@@ -187,7 +195,7 @@ AccountFragment.OnAccountClickedListener, PaymentFragment.OnPaymentClickedListen
     public void onRemoveClick(double total) {
         subTotal -= total;
         tvSubtotal.setText(decimalFormat.format(subTotal));
-        if(subTotal == 0){
+        if (subTotal == 0) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.frameCart, MessageFragment.newInstance(R.drawable.logo, "cart")).commit();
         }
@@ -195,7 +203,7 @@ AccountFragment.OnAccountClickedListener, PaymentFragment.OnPaymentClickedListen
 
     @Override
     public void onAddressClicked() {
-        getSupportFragmentManager().beginTransaction().add(R.id.frameAccount, new MapsFragment()).addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.frameCart, new MapsFragment()).addToBackStack(null).commit();
         getSupportFragmentManager().beginTransaction().remove(accountFragment).commit();
     }
 
@@ -206,11 +214,18 @@ AccountFragment.OnAccountClickedListener, PaymentFragment.OnPaymentClickedListen
 
     @Override
     public void onPaymentClicked(Customer customer) {
-        postOrder(customer);
+        order.setCustomer(customer);
+        fillOrder();
+        getSupportFragmentManager().beginTransaction().add(R.id.frameOrder, OrderDetailFragment.newInstance(order, "Cart")).addToBackStack(null).commit();
     }
 
     @Override
     public void onVerifyAddress(Address address) {
-        getSupportFragmentManager().beginTransaction().add(R.id.frameAccount, AccountFragment.newInstance(address)).addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.frameCart, AccountFragment.newInstance(address)).addToBackStack(null).commit();
+    }
+
+    @Override
+    public void onOrderDetailClicked() {
+        postOrder();
     }
 }
