@@ -46,16 +46,15 @@ public class OrdersCustomerActivity extends BaseCustomerActivity implements Orde
                 RecyclerView recyclerView = findViewById(R.id.recyclerViewOrders);
                 recyclerView.setLayoutManager(new LinearLayoutManager(OrdersCustomerActivity.this));
                 recyclerView.setAdapter(myAdapter);
-                Log.d("Response", response);
+                Log.d(TAG, response);
             } catch (Exception ex) {
-                Log.e("Request: ", ex.getMessage());
+                Log.e(TAG, ex.getMessage());
             }
         }, "getOrderByEmail", email);
 
     }
 
     @Override
-    public void onOrderDetailClicked() {
-
+    public void onOrderDetailClicked(String statusInfo) {
     }
 }

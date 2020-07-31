@@ -73,4 +73,8 @@
     <string name="total">Total</string>
     <string name="shipping">Shipping</string>
     <string name="tax">Tax</string>
+    <string name="changeToInProgress">Change To In Progress</string>
+    <string name="changeToShipped">Change To Shipped</string>
+    <string name="placeOrder">Place Order</string>
+    <string name="completed">Completed</string>
 </resources>

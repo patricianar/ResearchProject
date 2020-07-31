@@ -1,6 +1,7 @@
 package com.example.researchproject;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -82,15 +83,35 @@ public class OrderDetailFragment extends Fragment {
         imgClose.setOnClickListener(view1 -> getActivity().getSupportFragmentManager().popBackStack());
 
         if (mActivity.equals("Cart")) {
-            btnStatus.setText("Place Order");
-            btnStatus.setOnClickListener(v -> mListener.onOrderDetailClicked());
+            btnStatus.setText(R.string.placeOrder);
+            btnStatus.setOnClickListener(v -> mListener.onOrderDetailClicked(""));
         } else if (mActivity.equals("OrderCustomer")) {
             btnStatus.setVisibility(View.INVISIBLE);
         } else if (mActivity.equals("OrderAdmin")) {
             if (mOrder.getStatus().equals("Awaiting Fulfillment")) {
-                btnStatus.setText("Change to In Progress");
-            } else if (mOrder.getStatus().equals("In Progress")) {
-                btnStatus.setText("Change to Shipped");
+                btnStatus.setText(R.string.changeToInProgress);
+                btnStatus.setOnClickListener(v -> {
+                    btnStatus.setText(R.string.changeToShipped);
+                    if (mOrder.getStatus().equals("Awaiting Fulfillment")) {
+                        mListener.onOrderDetailClicked("In Progress," + mOrder.getCustomer().getId() + "," + mOrder.getId());
+                    }
+                });
+            }
+            if (mOrder.getStatus().equals("In Progress")) {
+                btnStatus.setText(R.string.changeToShipped);
+                btnStatus.setOnClickListener(v -> {
+                    btnStatus.setText(R.string.completed);
+                    btnStatus.setBackgroundColor(Color.GRAY);
+                    btnStatus.setClickable(false);
+                    if (mOrder.getStatus().equals("In Progress")) {
+                        mListener.onOrderDetailClicked("Shipped," + mOrder.getCustomer().getId() + "," + mOrder.getId());
+                    }
+                });
+            }
+            if (mOrder.getStatus().equals("Shipped")) {
+                btnStatus.setText(R.string.completed);
+                btnStatus.setBackgroundColor(Color.GRAY);
+                btnStatus.setClickable(false);
             }
         }
 
@@ -112,7 +133,6 @@ public class OrderDetailFragment extends Fragment {
         OrderDetailAdapter myAdapter = new OrderDetailAdapter(mOrder.getProductsOrdered());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(myAdapter);
-
     }
 
     @Override
@@ -133,6 +153,6 @@ public class OrderDetailFragment extends Fragment {
     }
 
     public interface OnOrderDetailClickedListener {
-        void onOrderDetailClicked();
+        void onOrderDetailClicked(String statusInfo);
     }
 }

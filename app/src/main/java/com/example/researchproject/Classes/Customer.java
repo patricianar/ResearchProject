@@ -8,7 +8,7 @@ public class Customer implements Serializable
     private Card card;
     private String email;
     private String first_name;
-    private int id;
+    private String id;
     private String last_name;
     private String password;
     private String phone;
@@ -17,8 +17,9 @@ public class Customer implements Serializable
     {
         //default constructor
     }
-    public Customer(String email, String first_name, String last_name, String password) {
+    public Customer(String email, String id, String first_name, String last_name, String password) {
         this.email = email;
+        this.id = id;
         this.first_name = first_name;
         this.last_name = last_name;
         this.password = password;
@@ -56,11 +57,11 @@ public class Customer implements Serializable
         this.first_name = first_name;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

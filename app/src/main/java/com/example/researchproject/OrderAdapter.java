@@ -1,9 +1,11 @@
 package com.example.researchproject;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,10 +14,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.researchproject.Admin.OrdersAdminActivity;
 import com.example.researchproject.Classes.Order;
 import java.text.DecimalFormat;
 
-public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.MyCustomViewHolder> {
+public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.MyCustomViewHolder>{
     private Order[] ordersArray;
     private String activity;
 

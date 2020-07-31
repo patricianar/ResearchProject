@@ -86,4 +86,3 @@ public abstract class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
         return 0.6f;// if the row is swiped less than 60%, the onSwipe method won’t be triggered
     }
 }
-

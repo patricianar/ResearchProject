@@ -31,7 +31,7 @@
             android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10dp"
-            app:srcCompat="@drawable/logo"></ImageView>
+            app:srcCompat="@drawable/logo" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:hint="First Name"
                 android:inputType="textEmailAddress"
-                android:textColor="@color/colorPrimaryText"></com.google.android.material.textfield.TextInputEditText>
+                android:textColor="@color/colorPrimaryText" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Last Name"
                 android:inputType="textEmailAddress"
-                android:textColor="@color/colorPrimaryText"></com.google.android.material.textfield.TextInputEditText>
+                android:textColor="@color/colorPrimaryText" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -96,7 +96,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Password"
                 android:inputType="textPassword"
-                android:textColor="@color/colorPrimaryText"></com.google.android.material.textfield.TextInputEditText>
+                android:textColor="@color/colorPrimaryText" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -112,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Confirm Password"
                 android:inputType="textPassword"
-                android:textColor="@color/colorPrimaryText"></com.google.android.material.textfield.TextInputEditText>
+                android:textColor="@color/colorPrimaryText" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatButton
@@ -134,7 +134,6 @@
         android:id="@+id/progressBar"
         android:layout_centerInParent="true"
         android:backgroundTint="@color/secondaryColor"/>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -21,6 +21,7 @@ import com.example.researchproject.Classes.Catalogue;
 import com.example.researchproject.Classes.Customer;
 import com.example.researchproject.R;
 import com.example.researchproject.VolleyService;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 
 import java.sql.ResultSet;
@@ -34,7 +35,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     private static final String TAG = "RegistrationActivity";
     EditText etFistName, etLastName, etEmail, etPassword1, etPassword2;
     Button btnRegister;
-
+    String token;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +46,18 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
         // Setting up listener
         btnRegister.setOnClickListener(this);
+
+        //Create token for cloud messaging
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.w(TAG, "getInstanceId failed", task.getException());
+                        return;
+                    }
+                    // Get new Instance ID token
+                    token = task.getResult().getToken();
+                    Log.e(TAG, token);
+                });
     }
 
     private void InitializeComponents() {
@@ -70,7 +83,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
             if (!validationResult.equals("Success")) {
                 Toast.makeText(RegistrationActivity.this, validationResult, Toast.LENGTH_LONG).show();
             } else {
-                final Customer customer = new Customer(email, firstName, lastName, password1);
+                final Customer customer = new Customer(email, token, firstName, lastName, password1);
                 Gson gson = new Gson();
                 final String jsonInString = gson.toJson(customer);
 //                String url = "https://myprojectstore.000webhostapp.com/customer/";

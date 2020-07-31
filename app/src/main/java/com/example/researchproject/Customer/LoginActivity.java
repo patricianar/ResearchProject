@@ -1,5 +1,6 @@
 package com.example.researchproject.Customer;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -14,10 +15,15 @@ import android.widget.Toast;
 
 import com.example.researchproject.Admin.ProductAdminActivity;
 import com.example.researchproject.Classes.Cart;
+import com.example.researchproject.Classes.Customer;
 import com.example.researchproject.Classes.Order;
 import com.example.researchproject.Classes.ProductOrdered;
 import com.example.researchproject.R;
 import com.example.researchproject.VolleyService;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.Gson;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -38,6 +44,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // Setting up listener
         btnLogin.setOnClickListener(this);
         tvLinkRegister.setOnClickListener(this);
+
     }
 
     private void InitializeComponents() {
@@ -65,10 +72,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Toast.makeText(LoginActivity.this, "Your account or password is incorrect.", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(LoginActivity.this, "Hello " + response, Toast.LENGTH_SHORT).show();
+                            updateToken(email);
+                            getCart();
                             if (email.equals("admin@gmail.com")) {
                                 startActivity(new Intent(LoginActivity.this, ProductAdminActivity.class));
                             } else {
-                                getCart();
                                 Thread.sleep(500);
                                 startActivity(new Intent(LoginActivity.this, ProductCustomerActivity.class));
                             }
@@ -90,18 +98,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         final SharedPreferences.Editor editorUser = sharedPrefUser.edit();
         editorUser.putString("Email", etEmail.getText().toString());
 
-        if (sharedPrefCart.getAll().isEmpty()) {
-            String url = "https://myprojectstore.000webhostapp.com/customer/cart/";
+        if(!etEmail.getText().toString().equals("admin@gmail.com") ) {
+            if (sharedPrefCart.getAll().isEmpty()) {
+                String url = "https://myprojectstore.000webhostapp.com/customer/cart/";
 
-            VolleyService request = new VolleyService(this);
-            request.executePostRequest(url, new VolleyService.VolleyCallback() {
-                @Override
-                public void getResponse(String response) {
+                VolleyService request = new VolleyService(this);
+                request.executePostRequest(url, response -> {
                     try {
                         Gson gson = new Gson();
                         ProductOrdered[] productsCart = gson.fromJson(response, ProductOrdered[].class);
                         SharedPreferences.Editor editorCart = sharedPrefCart.edit();
-                        for (int i = 0; i < productsCart.length; i++ ){
+                        for (int i = 0; i < productsCart.length; i++) {
                             editorCart.putInt(String.valueOf(productsCart[i].getId()),
                                     productsCart[i].getQuantity());
                             editorCart.apply();
@@ -109,14 +116,36 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         }
                         editorUser.putInt("Items", totalItems);
                         editorUser.apply();
-                        Log.e("tesssssssssss", totalItems + "");
                         Log.d(TAG, response);
                     } catch (Exception ex) {
                         Log.e(TAG, ex.getMessage() + response);
                     }
-                }
-            }, "getCartByEmail", etEmail.getText().toString());
+                }, "getCartByEmail", etEmail.getText().toString());
+            }
         }
         editorUser.apply();
+    }
+
+    //send token to update admin user
+    private void updateToken(String email){
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.w(TAG, "getInstanceId failed", task.getException());
+                        return;
+                    }
+                    // Get new Instance ID token
+                    String token = task.getResult().getToken();
+
+                    String url = "http://100.25.155.48/customer/";
+                    VolleyService request = new VolleyService(this);
+                    request.executePostRequest(url, response -> {
+                        try {
+                            Log.d(TAG, response);
+                        } catch (Exception ex) {
+                            Log.e(TAG, ex.getMessage());
+                        }
+                    }, "updateToken", email + "," + token);
+                });
     }
 }

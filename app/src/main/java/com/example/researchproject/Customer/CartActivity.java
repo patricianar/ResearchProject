@@ -225,7 +225,7 @@ public class CartActivity extends AppCompatActivity implements ProductCartAdapte
     }
 
     @Override
-    public void onOrderDetailClicked() {
+    public void onOrderDetailClicked(String statusInfo) {
         postOrder();
     }
 }
